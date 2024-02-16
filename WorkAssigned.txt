@@ -1,0 +1,85 @@
+main.c: This file contains the main function, which is the entry point of the program. It initializes the application and calls other functions to start the library administration system.
+
+library.h / library.c:
+
+library.h: This header file contains declarations of functions and structures related to library operations such as adding books, removing books, searching books, etc.
+library.c: This source file contains the implementations of the functions declared in library.h. It includes functions like addBook(), removeBook(), searchBook(), etc.
+
+user.h / user.c:
+
+user.h: This header file contains declarations of functions and structures related to user management such as adding users, removing users, updating user information, etc.
+user.c: This source file contains the implementations of the functions declared in user.h. It includes functions like addUser(), removeUser(), updateUser(), etc.
+
+book.h / book.c:
+
+book.h: This header file contains declarations of functions and structures related to book management such as adding books, removing books, updating book information, etc.
+book.c: This source file contains the implementations of the functions declared in book.h. It includes functions like addBook(), removeBook(), updateBook(), etc.
+
+utility.h / utility.c:
+
+utility.h: This header file contains declarations of utility functions used across the application, such as input validation, file handling functions, etc.
+utility.c: This source file contains the implementations of the utility functions declared in utility.h.
+
+data_structures.h / data_structures.c:
+
+data_structures.h: This header file contains declarations of custom data structures like linked lists, trees, etc., if any.
+data_structures.c: This source file contains the implementations of the custom data structures declared in data_structures.h.
+
+constants.h:
+
+This header file contains constant definitions used throughout the program, such as error codes, maximum lengths, etc.
+
+library_books.h / library_books.c:
+
+library_books.h: This header file will contain declarations of functions and structures related specifically to book management within the library. Functions in this file might include:
+
+struct Book: A structure representing a book, containing fields such as title, author, ISBN, etc.
+void addBook(struct Book newBook): Adds a new book to the library.
+void removeBook(int bookID): Removes a book from the library based on its unique identifier.
+struct Book* searchBook(char* title): Searches for a book in the library based on its title and returns a pointer to the book if found.
+Other functions related to book management.
+library_books.c: This source file will contain implementations of the functions declared in library_books.h. Detailed function definitions will be provided here, including logic for adding, removing, and searching for books in the library.
+
+library_users.h / library_users.c:
+
+library_users.h: This header file will contain declarations of functions and structures related specifically to user management within the library. Functions in this file might include:
+
+struct User: A structure representing a library user, containing fields such as name, ID, membership status, etc.
+void addUser(struct User newUser): Adds a new user to the library.
+void removeUser(int userID): Removes a user from the library based on their unique identifier.
+struct User* searchUser(char* name): Searches for a user in the library based on their name and returns a pointer to the user if found.
+Other functions related to user management.
+library_users.c: This source file will contain implementations of the functions declared in library_users.h. Detailed function definitions will be provided here, including logic for adding, removing, and searching for users in the library.
+
+
+
+M Krishna Teja
+
+->main.c
+->data_structures.c
+->utility.c
+->constants.c
+
+Sanjana
+->user.c
+
+
+Tarak
+library_books.h 
+
+Kshitij
+->book.c
+
+
+Rasmisha
+library_users.h 
+
+
+
+
+
+
+
+
+
+
