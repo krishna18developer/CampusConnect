@@ -1,0 +1,6 @@
+
+Add New File Name at the ending everytime
+
+gcc -o main main.c bookManager.c test.c 
+
+./main
