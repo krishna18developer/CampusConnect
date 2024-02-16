@@ -1,1 +1,2 @@
 void krishna();
+void sanjana();

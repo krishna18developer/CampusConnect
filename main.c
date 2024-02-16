@@ -5,11 +5,11 @@
 
 int main()
 {
-    system("cls"); //Used For Clearing Screen, Only works when stdlib.h is included
+    system("clear"); //Used For Clearing Screen, Only works when stdlib.h is included
     display();
 
     krishna();
-
+    sanjana();
     return 0;
 }
 
