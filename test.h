@@ -1,2 +1,0 @@
-void krishna();
-void sanjana();
