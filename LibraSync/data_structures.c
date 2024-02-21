@@ -1,15 +1,5 @@
 #include <stdlib.h>
-typedef struct
-{
-    void *data;
-    Node *next;
-} Node;
-
-typedef struct 
-{
-    Node *head;    
-    int size;
-} LinkedList;
+#include "include/data_structures.h"
 
 LinkedList* createLinkedList()
 {
@@ -23,7 +13,8 @@ LinkedList* createLinkedList()
     list->size = 0;
     return list;
 }
-void append(LinkedList *list, void *data) {
+void append(LinkedList *list, void *data) 
+{
     Node *newNode = (Node*)malloc(sizeof(Node));
     if (newNode == NULL) 
     {
@@ -50,9 +41,11 @@ void append(LinkedList *list, void *data) {
 }
 
 // Function to free memory allocated for the linked list
-void freeLinkedList(LinkedList *list) {
+void freeLinkedList(LinkedList *list) 
+{
     Node *current = list->head;
-    while (current != NULL) {
+    while (current != NULL) 
+    {
         Node *next = current->next;
         free(current);
         current = next;

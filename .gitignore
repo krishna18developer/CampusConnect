@@ -1,4 +1,8 @@
-output/
+librasync/output/
 .vscode/
-main
-play
+librasync/main
+librasync/main.exe
+librasync/play
+librasync/play.exe
+librasync/librasync
+librasync/librasync.exe
