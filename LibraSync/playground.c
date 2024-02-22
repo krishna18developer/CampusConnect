@@ -24,13 +24,13 @@ void save()
     scanf(" %s", ptr.author);
     printf("Enter Age\n");
     scanf("%d", &ptr.age);
-    saveData(&ptr,sizeof(bookTest), BOOK);
+    saveData(&ptr,sizeof(bookTest), 2,BOOK);
     printf("Saved Data!");
 }
 void load()
 {
     bookTest ptr = {0};
-    loadData(&ptr,sizeof(bookTest), BOOK);
+    loadData(&ptr,sizeof(bookTest), 2,BOOK);
     printf("Details Loaded!\n");
     printf("Name - %s\n", ptr.name);
     printf("Author - %s\n", ptr.author);
