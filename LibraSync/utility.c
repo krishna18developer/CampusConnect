@@ -15,25 +15,20 @@ char *getFileName(int k)
     case BOOK:
         return "books.bin";
         break;
+    case INDEX:
+        return "index.bin";
     default:
         break;
     }
     return "blank.bin";
 }
-char *getFolderName(int k)
+typedef struct
 {
-    switch (k)
-    {
-    case USER:
-        return "userdata";
-    case BOOK:
-        return "bookdata";
-        break;
-    default:
-        break;
-    }
-    return "default";
-}
+    int bookCount;
+    int userCount;
+} Index;
+
+
 void checkDestination(char *folder)
 {
     #if defined(_WIN32) || defined(_WIN64)
@@ -62,35 +57,38 @@ int directoryExists(const char *path) {
 // When Saving Structure Array, Multiply The Size With Number of Elements
 void saveData(void *data, size_t size,int n,int dataType) 
 {
+    if (n <= 0)
+    n = 1;
+
+    //size *= n;
     char filepath[100];
     char *fileName = getFileName(dataType);
-    checkDestination("data");
-    checkDestination(strcat("data/",getFolderName(dataType)));
-    snprintf(filepath, sizeof(filepath), "data/%s/%s_%d.bin", getFolderName(dataType), fileName, n); //Concatenates filepath and "data" strings
-    checkDestination(getFolderName(dataType));
+    snprintf(filepath, sizeof(filepath), "%s/%s", "data", fileName);
     FILE *file = fopen(filepath, "wb");
     if (file == NULL) 
     {
         perror("Error opening file");
         return;
     }
-    fwrite(data, size, 1, file);
+    fwrite(data, size, n, file);
 }
 
 void loadData(void *data, size_t size,int n,int dataType) 
 {
+    if (n <= 0)
+    n = 1;
+
+    //size *= n;
     char filepath[100];
     char *fileName = getFileName(dataType);
-    checkDestination("data");
-    checkDestination(strcat("data/",getFolderName(dataType)));
-    snprintf(filepath, sizeof(filepath), "data/%s/%s_%d.bin", getFolderName(dataType), fileName, n);//Concatenates filepath and "data" strings
+    snprintf(filepath, sizeof(filepath), "%s/%s", "data", fileName);
     FILE *file = fopen(filepath, "rb");
     if (file == NULL) 
     {
         perror("Error opening file");
         return;
     }
-    fread(data, size, 1, file);
+    fread(data, size, n, file);
 }
 
 int ParseCommand(char *command)
@@ -120,4 +118,24 @@ void UpperCase(char *input)
         *(input+i) = *(input+i) -32;
       }
    }
+}
+
+void wipeOut()
+{
+    printf("ENTER CONFIRM TO REMOVE ALL THE USER DATA AND CREATE BLANK FILES\n");
+
+    char confirm[8];
+    scanf("%s", confirm);
+
+    UpperCase(confirm);
+    if(strcmp(confirm,"CONFIRM") != 0)
+    {
+        printf("INVALID COMMAND\n");
+        return;
+    }
+
+    Index i = {0};
+
+    saveData(&i, sizeof(Index), 1, INDEX);
+    printf("DESTROYED\n");
 }
