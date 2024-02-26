@@ -21,27 +21,35 @@ void save()
 
     scanf("%d", &n);
 
-    loadData(&in, sizeof(Index),1,INDEX);
+    loadData(&in, sizeof(Index),1, INDEX);
+    
+    int total = in.bookCount + n; // 2 + 3 = 5  || 0 1 + 2 3 4  || 0 + 3 
+    bookTest book [total];
+    loadData(&book,sizeof(bookTest), in.bookCount , BOOK);
 
-    bookTest book [] = {0};
     printf("Stash - bookCount - %d\nuserCount - %d\n", in.bookCount, in.userCount);
-    for(int i = 0; i < n; i++)
+    int st = in.bookCount;
+    if(in.bookCount <=0)
+    st = 0;
+    for(int i = st; i < total; i++)
     {
+        printf("Detail - %d\n", i+1);
         printf("Enter Age\n");
         scanf("%d", &book[i].age);
         printf("Enter Roll\n");
         scanf("%d", &book[i].roll);
         in.bookCount++;
+        printf("\n\n");
     }
-    saveData(&in, sizeof(Index),1,INDEX);
-    saveData(&book,sizeof(bookTest), n ,BOOK);
+    saveData(&in, sizeof(Index),1, INDEX);
+    saveData(&book,sizeof(bookTest), n , BOOK);
     printf("Saved Data!\n\n");
 }
 void load()
 {
 
     Index in = {0};
-    loadData(&in, sizeof(Index),1,INDEX);
+    loadData(&in, sizeof(Index),1, INDEX);
 
 
     bookTest book [in.bookCount];

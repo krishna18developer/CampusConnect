@@ -14,9 +14,10 @@ typedef struct
 } bookTest;
 
 When A Variable Of The Structure is created always initialise to null value,
-Example : bookTest ptr = {0};
+Example : bookTest ptr = {0}; // Single Variable
+          bookTest ptr[] = {0};
 
 
-Use loadData(AdressOfStructureVariable, sizeOf(StructureVariable), BookTypeConstant) before starting operations on the data
+Use loadData(AdressOfStructureVariable, sizeOf(StructureVariable),Number Of Books (Size of Array), BookTypeConstant) before starting operations on the data
 
-Use saveData(AdressOfStructureVariable, sizeOf(StructureVariable), BookTypeConstant) after operations on the data to save it
+Use saveData(AdressOfStructureVariable, sizeOf(StructureVariable),Number Of Books (Size of Array), BookTypeConstant) after operations on the data to save it

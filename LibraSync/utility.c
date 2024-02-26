@@ -60,7 +60,7 @@ void saveData(void *data, size_t size,int n,int dataType)
     if (n <= 0)
     n = 1;
 
-    //size *= n;
+    size *= n;
     char filepath[100];
     char *fileName = getFileName(dataType);
     snprintf(filepath, sizeof(filepath), "%s/%s", "data", fileName);
@@ -78,7 +78,7 @@ void loadData(void *data, size_t size,int n,int dataType)
     if (n <= 0)
     n = 1;
 
-    //size *= n;
+    size *= n;
     char filepath[100];
     char *fileName = getFileName(dataType);
     snprintf(filepath, sizeof(filepath), "%s/%s", "data", fileName);
