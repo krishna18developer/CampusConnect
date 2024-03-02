@@ -1,4 +1,5 @@
 #include "constants.h"
+#include <stddef.h>
 
 typedef struct
 {

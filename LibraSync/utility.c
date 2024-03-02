@@ -5,10 +5,12 @@
 #include <sys/stat.h>
 #include <dirent.h>
 #include <errno.h>
+#include <stddef.h>
 
+char locfileName[100];
 char *getFileName(int n, int fileType)
 {
-    char fileName[100];
+    
     char *prefix;
     switch (fileType)
     {
@@ -23,8 +25,8 @@ char *getFileName(int n, int fileType)
     default:
         return "blank.bin";
     }
-    snprintf(fileName, sizeof(fileName), "%s%d%s", prefix, n, ".bin");
-    return fileName;
+    snprintf(locfileName, sizeof(locfileName), "%s%d%s", prefix, n, ".bin");
+    return locfileName;
 }
 char *getFolderName(int folderType)
 {
@@ -34,6 +36,8 @@ char *getFolderName(int folderType)
         return "users";
     case BOOK:
         return "books";
+    case INDEX:
+        return "index";
     default:
         break;
     }
@@ -43,7 +47,8 @@ typedef struct
 {
     int bookCount;
     int userCount;
-} Index;
+} 
+Index;
 
 
 void checkDestination(char *folder)
@@ -84,10 +89,12 @@ void saveData(void *data, size_t size,int n,int dataType)
     FILE *file = fopen(filepath, "wb");
     if (file == NULL) 
     {
-        perror("Error opening file");
+        perror("Error opening file ");
+        printf("%s\n", filepath);
         return;
     }
     fwrite(data, size, 1, file);
+    fclose(file);
 }
 void loadData(void *data, size_t size,int n,int dataType) 
 {
@@ -102,9 +109,11 @@ void loadData(void *data, size_t size,int n,int dataType)
     if (file == NULL) 
     {
         perror("Error opening file");
+        printf("%s\n", filepath);
         return;
     }
-    fwrite(data, size, 1, file);
+    fread(data, size, 1, file);
+    fclose(file);
 }
 
 int ParseCommand(char *command)

@@ -1,111 +1,66 @@
-//This File Can Be used For Testing Various Functions
-#include <stdio.h>
 #include "include/utility.h"
 #include "include/constants.h"
+#include <stdio.h>
 
-typedef struct
+typedef struct 
 {
-    char name[50];
-    char author[50];
-    int age;
-    int roll;
-    char test[20];
-} bookTest;
+    int id;
+    int salary;
+}
+User;
 
-
-void test()
+void load()
 {
     Index in = {0};
 
-    int n;
-    printf("Enter Number Of Books\n");
-    scanf("%d", &n);
-
     loadData(&in, sizeof(Index), 1, INDEX);
 
-    int total = in.bookCount + n;
-    bookTest book[total];
-    for(int i = in.bookCount; i < total; i++)
-    {
-        printf("Enter Detail of %d\n" , i);
-        printf("Enter Age\n");
-        scanf("%d", &book[i].age);
-        printf("Enter Roll\n");
-        scanf("%d", &book[i].roll);
-        in.bookCount++;
-        printf("\n\n");
-    }
+    printf("User Count : %d\n" , in.userCount);
 
-    for(int i = 0; i < total; i++)
+
+    User u[in.userCount];
+
+    for(int i = 0; i < in.userCount; i++)
     {
-        saveData(&book[i], sizeof(book[i]), i, BOOK);
+        loadData(&u[i],sizeof(User),i, USER);
+        printf("Loaded Successfully!\n");
+        printf("Details For User - %d\n", i+1);
+        printf("ID : %d\n", u[i].id);
+        printf("Salary : %d\n", u[i].salary);
+
     }
-    saveData(&in, sizeof(Index), 0, INDEX);
 }
-
-
-
-
-
 
 
 void save()
 {
-
     Index in = {0};
+
+    loadData(&in, sizeof(Index), 1, INDEX);
+
+    printf("Total Number of Users Present : %d\n", in.userCount);
     int n;
-    printf("Enter Number Of Books\n");
-
+    printf("Enter Additonal Number of Users Required : ");
     scanf("%d", &n);
+    int total = in.userCount + n;   // USER COUNT - 10
 
-    loadData(&in, sizeof(Index),0, INDEX);
-    
-    int total = in.bookCount + n; // 2 + 3 = 5  || 0 1 + 2 3 4  || 0 + 3 
-    bookTest book [total];
+    User u[total];
 
-    for(int i = 0; i < in.bookCount; i++)
-    saveData(&book, sizeof(bookTest), i, BOOK);
-
-    printf("Index - bookCount - %d\nuserCount - %d\n", in.bookCount, in.userCount);
-    int st = in.bookCount;
-    if(in.bookCount <=0)
-    st = 0;
-    for(int i = st; i < total; i++)
+    for(int i = in.userCount; i < total; i++)
     {
-        printf("Detail - %d\n", i+1);
-        printf("Enter Age\n");
-        scanf("%d", &book[i].age);
-        printf("Enter Roll\n");
-        scanf("%d", &book[i].roll);
-        in.bookCount++;
-        printf("\n\n");
+        printf("Enter Details For User - %d\n", i+1);
+        printf("Enter ID : ");
+        scanf("%d", &u[i].id);
+        printf("Enter Salary : ");
+        scanf("%d", &u[i].salary);
+        saveData(&u[i],sizeof(User),i, USER);
+        printf("Saved Successfully!\n");
+        in.userCount++;
     }
-    saveData(&in, sizeof(Index), 0, INDEX);
-    saveData(&book,sizeof(bookTest), n, BOOK);
-    printf("Saved Data!\n\n");
-}
-void load()
-{
-
-    Index in = {0};
-    loadData(&in, sizeof(Index),0, INDEX);
-
-    bookTest book [in.bookCount];
-    for(int i = 0; i < in.bookCount; i++)
-    loadData(&book, sizeof(bookTest), i, BOOK);
-
-    printf("Details Loaded!\n");
-    printf("Index :\nbookCount - %d\nuserCount - %d\n\n", in.bookCount, in.userCount);
-
-
-    for(int i = 0; i < in.bookCount; i++)
-    {
-        printf("Detail - %d\n", i+1);
-        printf("Age - %d\n", book[i].age);
-        printf("Roll - %d\n\n", book[i].roll);
-    }
+    saveData(&in, sizeof(Index), 1, INDEX);
 
 }
+
 
 int main()
 {
@@ -119,9 +74,6 @@ int main()
         break;
     case 1:
         load();
-        break;
-    case 3:
-        wipeOut();
         break;
     default:
         break;
