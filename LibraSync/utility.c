@@ -6,21 +6,38 @@
 #include <dirent.h>
 #include <errno.h>
 
-char *getFileName(int k)
+char *getFileName(int n, int fileType)
 {
-    switch (k)
+    char fileName[100];
+    char *prefix;
+    switch (fileType)
     {
     case USER:
-        return "users.bin";
+        prefix = "users-";
+        break;
     case BOOK:
-        return "books.bin";
+        prefix = "books-";
         break;
     case INDEX:
         return "index.bin";
     default:
+        return "blank.bin";
+    }
+    snprintf(fileName, sizeof(fileName), "%s%d%s", prefix, n, ".bin");
+    return fileName;
+}
+char *getFolderName(int folderType)
+{
+    switch (folderType)
+    {
+    case USER:
+        return "users";
+    case BOOK:
+        return "books";
+    default:
         break;
     }
-    return "blank.bin";
+    return "blank";
 }
 typedef struct
 {
@@ -58,37 +75,36 @@ int directoryExists(const char *path) {
 void saveData(void *data, size_t size,int n,int dataType) 
 {
     if (n <= 0)
-    n = 1;
+    n = DEFAULT;
 
-    size *= n;
     char filepath[100];
-    char *fileName = getFileName(dataType);
-    snprintf(filepath, sizeof(filepath), "%s/%s", "data", fileName);
+    char *fileName = getFileName(n, dataType);
+    char *folderName = getFolderName(dataType);
+    snprintf(filepath, sizeof(filepath), "%s/%s/%s", "data", folderName,fileName);
     FILE *file = fopen(filepath, "wb");
     if (file == NULL) 
     {
         perror("Error opening file");
         return;
     }
-    fwrite(data, size, n, file);
+    fwrite(data, size, 1, file);
 }
-
 void loadData(void *data, size_t size,int n,int dataType) 
 {
     if (n <= 0)
-    n = 1;
+    n = DEFAULT;
 
-    size *= n;
     char filepath[100];
-    char *fileName = getFileName(dataType);
-    snprintf(filepath, sizeof(filepath), "%s/%s", "data", fileName);
+    char *fileName = getFileName(n, dataType);
+    char *folderName = getFolderName(dataType);
+    snprintf(filepath, sizeof(filepath), "%s/%s/%s", "data", folderName,fileName);
     FILE *file = fopen(filepath, "rb");
     if (file == NULL) 
     {
         perror("Error opening file");
         return;
     }
-    fread(data, size, n, file);
+    fwrite(data, size, 1, file);
 }
 
 int ParseCommand(char *command)
