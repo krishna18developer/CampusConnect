@@ -80,7 +80,7 @@ int directoryExists(const char *path) {
 void saveData(void *data, size_t size,int n,int dataType) 
 {
     if (n <= 0)
-    n = DEFAULT;
+    n = 0;
 
     char filepath[100];
     char *fileName = getFileName(n, dataType);
@@ -99,7 +99,7 @@ void saveData(void *data, size_t size,int n,int dataType)
 void loadData(void *data, size_t size,int n,int dataType) 
 {
     if (n <= 0)
-    n = DEFAULT;
+    n = 0;
 
     char filepath[100];
     char *fileName = getFileName(n, dataType);
