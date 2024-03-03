@@ -2,7 +2,7 @@
 #include "include/constants.h"
 #include "include/book.h"
 #include <stdio.h>
-
+#include <stdlib.h>
 // DATA CREATION TOOL
 
 typedef struct 
@@ -39,7 +39,7 @@ void usersaveAdditional()
     Index in = {0};
 
     loadData(&in, sizeof(Index), 1, INDEX);
-
+    in.books = calloc(in.bookCount, sizeof(int));
     printf("Total Number of Users Present : %d\n", in.userCount);
     int n;
     printf("Enter Additonal Number of Users Required : ");
@@ -71,7 +71,6 @@ void usersaveAdditional()
 void bookloadAll()
 {
     Index in = {0};
-
     loadData(&in, sizeof(Index), 1, INDEX);
 
     printf("Book Count : %d\n" , in.bookCount);
@@ -124,30 +123,104 @@ void bookSaveAdditional()
     }
 }
 
-
-int main()
+void bookAddSpecific()
 {
-    int n = 0;
-    printf("Enter Number\n");
+    int n;
+    Index in = {0};
+    loadData(&in, sizeof(Index),1,INDEX);
+    printf("Enter Number of The Book : ");
     scanf(" %d", &n);
-    switch (n)
+
+    Book u;
+    printf("Enter Details For Book - %d\n", n);
+    printf("Enter ID : ");
+    scanf("%d", &u.id);
+    printf("Enter Cost : ");
+    scanf("%d", &u.cost);
+    saveData(&u, sizeof(Book), n-1, BOOK);
+    printf("Saved Successfully!\n");
+    in.bookCount++;
+    saveData(&in, sizeof(Index), 1, INDEX);
+}
+
+void userAddSpecific()
+{
+    int n;
+    Index in = {0};
+    loadData(&in, sizeof(Index),1,INDEX);
+    printf("Enter Number of The User : ");
+    scanf(" %d", &n);
+
+    User u;
+    printf("Enter Details For User - %d\n", n);
+    printf("Enter ID : ");
+    scanf("%d", &u.id);
+    printf("Enter Salary : ");
+    scanf("%d", &u.salary);
+    saveData(&u, sizeof(User), n-1 , USER);
+    printf("Saved Successfully!\n");
+    in.userCount++;
+    saveData(&in, sizeof(Index), 1, INDEX);
+}
+
+
+
+
+
+
+
+void datacreator()
+{
+    int n = 0,godNumber;
+    printf("Enter God Number : ");
+    scanf(" %d", &godNumber);
+    if(godNumber != 17)
     {
-    case 0:
-        usersaveAdditional();
-        break;
-    case 1:
-        userLoadAll();
-        break;
-    case 2:
-        bookSaveAdditional();
-        break;
-    case 3:
-        bookloadAll();
-        break;
-    default:
-        break;
+        return;
     }
-    return 0;
+    while (TRUE)
+    {
+        
+        printf("WELCOME TO GOD MODE\n");
+        printf("1 - USER SAVE ADDITIONAL\n");
+        printf("2 - USER LOAD ALL\n");
+        printf("3 - USER ADD SPECIFIC\n");
+        printf("4 - BOOK SAVE ADDITIONAL\n");
+        printf("5 - BOOK LOAD ALL\n");
+        printf("6 - BOOK ADD SPECIFIC\n");
+        printf("7 - EXIT\n\n");
+        printf("Enter Number\n");
+        scanf(" %d", &n);
+        switch (n)
+        {
+        case 1:
+            usersaveAdditional();
+            break;
+        case 2:
+            userLoadAll();
+            break;
+        case 3:
+            userAddSpecific();
+            break;
+        case 4:
+            bookSaveAdditional();
+            break;
+        case 5:
+            bookloadAll();
+            break;
+        case 6:
+            bookAddSpecific();
+            break;
+        case 7:
+            return;
+        default:
+            break;
+        }
+        getchar();
+        getchar();
+        system("clear");
+    }
+    
 }
 
 

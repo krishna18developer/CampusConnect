@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "include/constants.h"
+#include "include/utility.h"
 #include <sys/stat.h>
 #include <dirent.h>
 #include <errno.h>
@@ -43,14 +44,6 @@ char *getFolderName(int folderType)
     }
     return "blank";
 }
-typedef struct
-{
-    int bookCount;
-    int userCount;
-} 
-Index;
-
-
 void checkDestination(char *folder)
 {
     #if defined(_WIN32) || defined(_WIN64)
@@ -112,6 +105,14 @@ void loadData(void *data, size_t size,int n,int dataType)
         printf("%s\n", filepath);
         return;
     }
+    if(dataType == TEST)
+    {
+        Index *in = (Index*) data;
+        fwrite(&in->books, sizeof(in->bookSize), 1, file);
+        fwrite(&in->users, sizeof(in->userSize), 1, file);
+        fwrite(in->books, sizeof(int), in->bookSize, file);
+        return;
+    }
     fread(data, size, 1, file);
     fclose(file);
 }
@@ -127,9 +128,21 @@ int ParseCommand(char *command)
     {
         k = USER;
     }
-    else if(strcmp(command, "EXIT") == 0)
+    else if(strcmp(command, "EXIT") == 0|| strcmp(command, "BREAK") == 0)
     {
         k = EXIT;
+    }
+    else if(strcmp(command, "CLEAR") == 0 || strcmp(command, "CLS") == 0)
+    {
+        k = CLEAR;
+    }
+    else if(strcmp(command, "MAIN") == 0 || strcmp(command, "MAINMENU") == 0 || strcmp(command, "MENU") == 0)
+    {
+        k = MAINMENU;
+    }
+    else if(strcmp(command, "GOD") == 0 || strcmp(command, "GODMODE") == 0 )
+    {
+        k = GODMODE;
     }
     return k;
 }
@@ -140,7 +153,7 @@ void UpperCase(char *input)
     {
       if(*(input+i) >= 'a' && *(input+i) <= 'z') 
       {
-        *(input+i) = *(input+i) -32;
+        *(input+i) = *(input+i) - 32;
       }
    }
 }

@@ -5,7 +5,15 @@ typedef struct
 {
     int bookCount;
     int userCount;
-} Index;
+
+    int *books;
+    size_t bookSize;
+
+    int *users;
+    size_t userSize;
+
+}
+Index;
 
 void loadData(void *data, size_t size, int n, int dataType); 
 void saveData(void *data, size_t size, int n, int dataType);
