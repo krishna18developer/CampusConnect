@@ -127,7 +127,11 @@ void bookAddSpecific()
 {
     int n;
     Index in = {0};
-    loadData(&in, sizeof(Index),1,INDEX);
+    int k = loadData(&in, sizeof(Index),1,INDEX);
+    if(k == -1)
+    {
+        saveData(&in, sizeof(Index), 1, INDEX);
+    }
     printf("Enter Number of The Book : ");
     scanf(" %d", &n);
 
@@ -162,9 +166,6 @@ void userAddSpecific()
     in.userCount++;
     saveData(&in, sizeof(Index), 1, INDEX);
 }
-
-
-
 
 
 

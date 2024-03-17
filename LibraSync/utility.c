@@ -70,7 +70,7 @@ int directoryExists(const char *path) {
     }
 }
 // When Saving Structure Array, Multiply The Size With Number of Elements
-void saveData(void *data, size_t size,int n,int dataType) 
+void saveData(void *data, size_t size,int n,int dataType)
 {
     if (n <= 0)
     n = 0;
@@ -89,7 +89,7 @@ void saveData(void *data, size_t size,int n,int dataType)
     fwrite(data, size, 1, file);
     fclose(file);
 }
-void loadData(void *data, size_t size,int n,int dataType) 
+int loadData(void *data, size_t size,int n,int dataType) 
 {
     if (n <= 0)
     n = 0;
@@ -103,7 +103,7 @@ void loadData(void *data, size_t size,int n,int dataType)
     {
         perror("Error opening file");
         printf("%s\n", filepath);
-        return;
+        return -1;
     }
     if(dataType == TEST)
     {
@@ -111,10 +111,11 @@ void loadData(void *data, size_t size,int n,int dataType)
         fwrite(&in->books, sizeof(in->bookSize), 1, file);
         fwrite(&in->users, sizeof(in->userSize), 1, file);
         fwrite(in->books, sizeof(int), in->bookSize, file);
-        return;
+        return 0;
     }
     fread(data, size, 1, file);
     fclose(file);
+    return 0;
 }
 
 int ParseCommand(char *command)
@@ -128,7 +129,7 @@ int ParseCommand(char *command)
     {
         k = USER;
     }
-    else if(strcmp(command, "EXIT") == 0|| strcmp(command, "BREAK") == 0)
+    else if(strcmp(command, "EXIT") == 0 || strcmp(command, "BREAK") == 0)
     {
         k = EXIT;
     }
