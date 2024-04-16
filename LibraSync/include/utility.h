@@ -15,7 +15,22 @@ typedef struct
 }
 Index;
 
-int loadData(void *data, size_t size, int n, int dataType); 
+typedef struct
+{
+    /* data */
+    int k;
+}
+Book;
+
+typedef struct
+{
+    /* data */
+    int k;
+}
+User;
+
+
+void loadData(int dataType, void *in); 
 void saveData(void *data, size_t size, int n, int dataType);
 int ParseCommand(char *command);
 void UpperCase(char *input);
