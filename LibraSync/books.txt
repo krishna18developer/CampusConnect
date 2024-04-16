@@ -1,0 +1,20 @@
+{Name : The Great Gatsby
+ },{Author : F. Scott Fitzgerald
+  },{Genre : Fiction
+  },{Price : 10.99 },{PublishedYear : 1925 };
+{Name : Harry Potter and the Philosopher's Stone
+ },{Author : J.K. Rowling
+  },{Genre : Fantasy
+  },{Price : 12.99 },{PublishedYear : 1997 };
+{Name : TestBook
+ },{Author : George Orwell
+  },{Genre : SomeGenre
+  },{Price : 999.00 },{PublishedYear : 2024 };
+{Name : To Kill a Mockingbird
+ },{Author : Harper Lee
+  },{Genre : Fiction
+  },{Price : 9.99 },{PublishedYear : 1960 };
+{Name : 1984
+ },{Author : George Orwell
+  },{Genre : Dystopian
+  },{Price : 8.99 },{PublishedYear : 1949 };

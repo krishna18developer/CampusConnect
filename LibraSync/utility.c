@@ -121,7 +121,7 @@ int loadData(void *data, size_t size,int n,int dataType)
 int ParseCommand(char *command)
 {
     int k = DEFAULT;
-    if(strcmp(command, "BOOK") == 0)
+    if(strcmp(command, "BOOK") == 0 || strcmp(command, "BK") == 0)
     {
         k = BOOK;
     }
@@ -149,7 +149,7 @@ int ParseCommand(char *command)
     {
         k = REMOVEBOOK;
     }
-     else if(strcmp(command, "SEARCHBOOK") == 0 || strcmp(command, "BOOKSEARCH") == 0 )
+     else if(strcmp(command, "SEARCHBOOK") == 0 || strcmp(command, "BOOKSEARCH") == 0 || strcmp(command, "SB") == 0 )
     {
         k = SEARCHBOOK;
     }

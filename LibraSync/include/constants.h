@@ -18,6 +18,8 @@
 
 #define TEST 99
 
+#define MAXINPUTSIZE 50
+
 
 #define ADDBOOK 11
 #define REMOVEBOOK 12

@@ -1,6 +1,9 @@
 #include "constants.h"
 #include <stddef.h>
 
+
+#ifndef UTILITY_H_INCLUDED
+#define UTILITY_H_INCLUDED
 typedef struct
 {
     int bookCount;
@@ -18,9 +21,9 @@ Index;
 typedef struct
 {
     /* data */
-    char* name;
-    char* author;
-    char* genre;
+    char name[MAXINPUTSIZE];
+    char author [MAXINPUTSIZE];
+    char genre[MAXINPUTSIZE];
     float price;
     int publishedYear;
 }
@@ -32,6 +35,9 @@ typedef struct
     int k;
 }
 User;
+
+#endif 
+
 
 
 //void loadData(int dataType, void *in); 

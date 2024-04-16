@@ -1,2 +1,3 @@
 void bookMenu();
-void addBook();
+void InputAddBook();
+void InputSearchBook();

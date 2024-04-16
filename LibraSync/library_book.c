@@ -1,6 +1,7 @@
 #include "include/utility.h"
 #include "include/constants.h"
 #include "include/library_book.h"
+#include "include/book.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -22,7 +23,7 @@ void bookMenu()
         switch (takeCommand(command))
         {
             case ADDBOOK:
-            addBook();
+            InputAddBook();
             break;
 
             case REMOVEBOOK:
@@ -30,7 +31,7 @@ void bookMenu()
             break;
 
             case SEARCHBOOK:
-            printf("search !!!!!!\n");
+            InputSearchBook();
             break;
 
             case CLEAR:
@@ -54,28 +55,64 @@ void bookMenu()
     while (1);
 }
 
-void addBook()
+void InputAddBook()
 {
     Book book;
     printf("\nEnter Details of The Book\n");
     printf("Name : ");
-    scanf("%s", book.name);
-    getchar();
+    scanf(" %s", book.name);
     printf("Author : ");
-    scanf("%s", book.author);
-    getchar();
+    scanf(" %s", book.author);
     printf("Price : ");
-    scanf("%f", &book.price);
-    getchar();
+    scanf(" %f", &book.price);
     printf("Published Year : ");
-    scanf("%d", &book.publishedYear);
-    getchar();
+    scanf(" %d", &book.publishedYear);
     printf("Genre : ");
-    scanf("%s", book.genre);
-    getchar();
+    scanf(" %s", book.genre);
 
+    AddBook(&book);
 
-    printf("Author : %s\n", book.author);
+}
+void byName()
+{
+    char *in;
+    printf("Enter Name : ");
+    scanf(" %[^\n]%*c", in);
+    SearchBookByName(in);
+}
+void byAuthor()
+{
+    char *in;
+    printf("Enter Author : ");
+    scanf(" %[^\n]%*c", in);
+    SearchBookByAuthor(in);
+}
+void byGenre()
+{
+    char *in;
+    printf("Enter Genre : ");
+    scanf(" %[^\n]%*c", in);
+    SearchBookByGenre(in);
+}
+void InputSearchBook()
+{
+    printf("Search By\n1)Name\t\t2)Author\t\t3)Genre\n");
+    int option;
+    scanf("%d", &option);
 
-
+    switch (option)
+    {
+    case 1:
+        byName();
+        break;
+    case 2:
+        byAuthor();
+        break;
+    case 3:
+        byGenre();
+        break;
+    default:
+        break;
+    }
+    
 }
