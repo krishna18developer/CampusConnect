@@ -17,3 +17,8 @@
 #define GODMODE 100
 
 #define TEST 99
+
+
+#define ADDBOOK 11
+#define REMOVEBOOK 12
+#define SEARCHBOOK 13

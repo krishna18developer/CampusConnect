@@ -18,7 +18,11 @@ Index;
 typedef struct
 {
     /* data */
-    int k;
+    char* name;
+    char* author;
+    char* genre;
+    float price;
+    int publishedYear;
 }
 Book;
 
@@ -30,8 +34,10 @@ typedef struct
 User;
 
 
-void loadData(int dataType, void *in); 
-void saveData(void *data, size_t size, int n, int dataType);
+//void loadData(int dataType, void *in); 
+int loadData(void *data, size_t size,int n,int dataType);
+void saveData(void *data, size_t size,int n,int dataType);
 int ParseCommand(char *command);
 void UpperCase(char *input);
 void wipeOut();
+int takeCommand(char *command);

@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include "include/utility.h"
 #include "include/constants.h"
-#include "include/godmode.h"
+#include "include/library_book.h"
 
 void mainMenu(int);
 int takeCommand(char *);
@@ -16,28 +16,6 @@ int main()
     char command [COMMAND_MAX_SIZE];
 
     mainMenu(CLEAR_SCREEN);
-    
-    /*
-    scanf(" %s", command);
-
-    UpperCase(command);
-    int result = ParseCommand(command);
-    
-    switch (takeCommand(command))
-    {
-    case USER:
-        printf("User !!!!!!\n");
-        break;
-    case BOOK:
-        printf("Book !!!!!!\n");
-        break;
-    case EXIT:
-        exitClearance = TRUE;
-    default:
-        printf("Boring Default :)");
-        break;
-    }
-    */
     do
     {
         switch (takeCommand(command))
@@ -51,7 +29,8 @@ int main()
             break;
 
             case BOOK:
-            printf("Book !!!!!!\n");
+            bookMenu();
+            mainMenu(CLEAR_SCREEN);
             break;
 
             case CLEAR:
@@ -60,10 +39,6 @@ int main()
 
             case MAINMENU:
             mainMenu(CLEAR_SCREEN);
-            break;
-
-            case GODMODE:
-            datacreator();
             break;
 
             default:
@@ -102,12 +77,4 @@ void mainMenu(int clear)
     printf("\t     USER\t\t\tUser Management\n");
     printf("\t     CLEAR\t\t\tClear Screen\n");
 
-}
-int takeCommand(char *command)
-{
-    printf("\nCommand : ");
-    scanf(" %s", command);
-
-    UpperCase(command);
-    return ParseCommand(command);
 }

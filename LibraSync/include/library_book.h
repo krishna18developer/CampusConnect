@@ -1,1 +1,1 @@
-void displaybook(int n);
+void bookMenu();
