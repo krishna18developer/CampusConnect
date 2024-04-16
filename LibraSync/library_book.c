@@ -1,5 +1,6 @@
 #include "include/utility.h"
 #include "include/constants.h"
+#include "include/library_book.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -21,7 +22,7 @@ void bookMenu()
         switch (takeCommand(command))
         {
             case ADDBOOK:
-            //exitClearance = TRUE;
+            addBook();
             break;
 
             case REMOVEBOOK:
@@ -63,13 +64,18 @@ void addBook()
     printf("Author : ");
     scanf("%s", book.author);
     getchar();
-    printf("Name : ");
-    scanf("%s", book.name);
+    printf("Price : ");
+    scanf("%f", &book.price);
     getchar();
-    printf("Name : ");
-    scanf("%s", book.name);
+    printf("Published Year : ");
+    scanf("%d", &book.publishedYear);
     getchar();
-    printf("Name : ");
-    scanf("%s", book.name);
+    printf("Genre : ");
+    scanf("%s", book.genre);
     getchar();
+
+
+    printf("Author : %s\n", book.author);
+
+
 }
