@@ -59,12 +59,17 @@ void addBook()
     printf("\nEnter Details of The Book\n");
     printf("Name : ");
     scanf("%s", book.name);
+    getchar();
     printf("Author : ");
-    scanf("%s", book.name);
+    scanf("%s", book.author);
+    getchar();
     printf("Name : ");
     scanf("%s", book.name);
+    getchar();
     printf("Name : ");
     scanf("%s", book.name);
+    getchar();
     printf("Name : ");
     scanf("%s", book.name);
+    getchar();
 }
