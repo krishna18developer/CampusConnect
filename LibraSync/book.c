@@ -23,7 +23,7 @@ void AddBook(Book* book)
         return;
     }
  
-    fprintf(file, BOOKFILEINPUTSTRING , book->name, book->author, book->genre, book->price, book->publishedYear);
+    fprintf(file, BOOKFILEREMOVALSTRING , book->name, book->author, book->genre, book->price, book->publishedYear);
     printf("AddedBook!");
     fclose(file);
 }
@@ -48,7 +48,8 @@ void RemoveBook(int option)
     Book *book = foundBooks + --option;
    // sprintf(rem, BOOKFILEREMOVALSTRING , book->name, book->author, book->genre, book->price, book->publishedYear);
    // printf("rem {%d}: %s\n", option , rem);
-
+    Book *newSetOfBooks = (Book*) calloc(--numberOfBooks, sizeof(Book));
+    int k = 0;
     for(int i = 0; i < numberOfBooks; i++)
     {
 
@@ -66,7 +67,7 @@ void RemoveBook(int option)
         Book *b = books + i;
         sprintf(rem, BOOKFILEREMOVALSTRING , book->name, book->author, book->genre, book->price, book->publishedYear);
         sprintf(rem2, BOOKFILEREMOVALSTRING , b->name, b->author, b->genre, b->price, b->publishedYear);
-
+        
         //printf("rem : %s\nrem2: %s\n", rem,rem2);
 
         
@@ -79,13 +80,16 @@ void RemoveBook(int option)
         }
         else 
         {
-           fprintf(file, BOOKFILEINPUTSTRING , b->name, b->author, b->genre, b->price, b->publishedYear);
+           //fprintf(file, BOOKFILEINPUTSTRING , b->name, b->author, b->genre, b->price, b->publishedYear);
            //printf("%s\n", rem3);
+
+          *(newSetOfBooks + k) = *b;
+          k++;
         }
         
         fclose(file);
     }
-    numberOfBooks--;
+    books = newSetOfBooks;
 }
 
 
@@ -106,10 +110,44 @@ void RemoveMultipleBook()
     for(int i = 0; i < numberOfBooksToRemove; i++)
     RemoveBook(BooksToRemove[i]);
 
+    printf("Remaining\n");
+    for(int i = 0; i < numberOfBooks;i++)
+    {
+        Book *book = books + i;
+        AddBook(book);
+        printf("Name: %s\nAuthor: %s\nGenre: %s\nPrice: %.2f\nPublished Year: %d\n\n", book->name, book->author, book->genre, book->price, book->publishedYear);
+    }
+    
+
     getchar();
     getchar();
 }
 
+void RemoveAllBooks()
+{
+    char option[10];
+    printf("Are You Sure You Want To Remove All The Books Data Present?\nEnter 'DELETE' To Erase All Books\n");
+    getchar();
+    scanf("%s", option);
+    if(strstr(option, "DELETE") != NULL)
+    {
+        FILE *file;
+
+        file = fopen("books.txt", "w");
+        if(file == NULL)
+        {
+            printf("Unable To Remove Books Data.\nPlease Try Again.\n");
+            return;
+        }
+        fclose(file);
+        printf("Deleted All The Books Data Successfully!");
+        getchar();
+    }
+    else
+    {
+        printf("Wrong Confirmation Code!\nDid Not Delete The Books Data!\n");
+    }
+}
 void AskRemoveBook()
 {
     char option;
@@ -125,7 +163,7 @@ void AskRemoveBook()
         RemoveMultipleBook();
         break;
         case '3':
-        RemoveSingleBook();
+        RemoveAllBooks();
         break;
         case RETURNCHARACTER:
         default:
@@ -177,7 +215,6 @@ void LoadBooks()
     }
     */
 }
-
 
 
 
