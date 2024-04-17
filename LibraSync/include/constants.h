@@ -14,6 +14,8 @@
 #define TRUE 1
 #define FALSE 0
 
+#define RETURNCHARACTER '\n'
+
 #define GODMODE 100
 
 #define TEST 99
