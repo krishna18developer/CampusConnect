@@ -24,153 +24,6 @@ void AddBook(Book* book)
     fclose(file);
 }
 
-void SearchBookByName(char* name)
-{
-    LoadBooks();
-    int found = FALSE;
-    Book* foundBooks;
-    int numberOfFoundBooks = 0;
-    for(int i = 0; i < numberOfBooks;i++)
-    {
-        
-        Book *book = books + i;
-        if(strcmp(name, book->name) == 0)
-        {
-            numberOfFoundBooks++;
-            found = TRUE;
-        }
-    }
-    if(found == FALSE)
-    {
-        printf("No Books Found of Name %s ", name);
-        getchar();
-        system("clear");
-        numberOfBooks = 0;
-        free(books);
-        return;
-    }
-    foundBooks = (Book*) calloc(numberOfFoundBooks, sizeof(Book));
-    for(int i = 0, k = 0; i < numberOfBooks && k < numberOfFoundBooks;i++)
-    {
-        
-        Book *book = books + i;
-        if(strcmp(name, book->name) == 0)
-        {
-            *(foundBooks+k) = *book;
-            k++; 
-        }
-    }
-    printf("\n");
-
-    for(int i = 0; i < numberOfFoundBooks; i++)
-    {
-        Book *book = foundBooks + i;
-        printf("Name: %s\nAuthor: %s\nGenre: %s\nPrice: %.2f\nPublished Year: %d\n\n", book->name, book->author, book->genre, book->price, book->publishedYear);
-    }
-
-    AskRemoveBook(foundBooks);
-    system("clear");
-    numberOfBooks = 0;
-    free(books);
-}
-void SearchBookByAuthor(char* author)
-{
-    LoadBooks();
-    int found = FALSE;
-    Book* foundBooks;
-    int numberOfFoundBooks = 0;
-    for(int i = 0; i < numberOfBooks;i++)
-    {
-        
-        Book *book = books + i;
-        if(strcmp(author, book->author) == 0)
-        {
-            numberOfFoundBooks++;
-            found = TRUE;
-        }
-    }
-    if(found == FALSE)
-    {
-        printf("No Books Found of Author %s ", author);
-        getchar();
-        system("clear");
-        numberOfBooks = 0;
-        free(books);
-        return;
-    }
-    foundBooks = (Book*) calloc(numberOfFoundBooks, sizeof(Book));
-    for(int i = 0, k = 0; i < numberOfBooks && k < numberOfFoundBooks;i++)
-    {
-        
-        Book *book = books + i;
-        if(strcmp(author, book->author) == 0)
-        {
-            *(foundBooks+k) = *book;
-            k++; 
-        }
-    }
-    printf("\n");
-
-    for(int i = 0; i < numberOfFoundBooks; i++)
-    {
-        Book *book = foundBooks + i;
-        printf("Name: %s\nAuthor: %s\nGenre: %s\nPrice: %.2f\nPublished Year: %d\n\n", book->name, book->author, book->genre, book->price, book->publishedYear);
-    }
-
-    AskRemoveBook(foundBooks);
-    system("clear");
-    numberOfBooks = 0;
-    free(books);
-}
-void SearchBookByGenre(char* genre)
-{
-    LoadBooks();
-    int found = FALSE;
-    Book* foundBooks;
-    int numberOfFoundBooks = 0;
-    for(int i = 0; i < numberOfBooks;i++)
-    {
-        
-        Book *book = books + i;
-        if(strcmp(genre, book->genre) == 0)
-        {
-            numberOfFoundBooks++;
-            found = TRUE;
-        }
-    }
-    if(found == FALSE)
-    {
-        printf("No Books Found of Genre %s ", genre);
-        getchar();
-        system("clear");
-        numberOfBooks = 0;
-        free(books);
-        return;
-    }
-    foundBooks = (Book*) calloc(numberOfFoundBooks, sizeof(Book));
-    for(int i = 0, k = 0; i < numberOfBooks && k < numberOfFoundBooks;i++)
-    {
-        
-        Book *book = books + i;
-        if(strcmp(genre, book->genre) == 0)
-        {
-            *(foundBooks+k) = *book;
-            k++; 
-        }
-    }
-    printf("\n");
-    for(int i = 0; i < numberOfFoundBooks; i++)
-    {
-        Book *book = foundBooks + i;
-        printf("Name: %s\nAuthor: %s\nGenre: %s\nPrice: %.2f\nPublished Year: %d\n\n", book->name, book->author, book->genre, book->price, book->publishedYear);
-    }
-
-    AskRemoveBook(foundBooks);
-    system("clear");
-    numberOfBooks = 0;
-    free(books);
-}
-
 void RemoveSingleBook(Book *found)
 {
     LoadBooks();
@@ -246,4 +99,93 @@ void LoadBooks()
        printf("Name: %s\nAuthor: %s\nGenre: %s\nPrice: %.2f\nPublished Year: %d\n\n", book->name, book->author, book->genre, book->price, book->publishedYear);
     }
     */
+}
+
+
+
+
+void SearchBook(char* name,int type)
+{
+    LoadBooks();
+    int found = FALSE;
+    Book* foundBooks;
+    int numberOfFoundBooks = 0;
+    char *bookTypeIdentifier = "Author";
+    
+    for(int i = 0; i < numberOfBooks;i++)
+    {
+        
+        Book *book = books + i;
+        char *lName = LowerCase(name), *lB = LowerCase(book->name);
+        switch (type)
+        {
+        case BYNAME:
+            bookTypeIdentifier = "Name";
+            break;
+        case BYAUTHOR:
+            bookTypeIdentifier = "Author";
+            lB = LowerCase(book->author);
+            break;
+        case BYGENRE:
+            bookTypeIdentifier = "Genre";
+            lB = LowerCase(book->genre);
+            break;  
+        default:
+            break;
+        }
+        if(strstr(lB, lName) != NULL)
+        {
+            numberOfFoundBooks++;
+            found = TRUE;
+        }
+        lB = lName;
+        free(lName);
+    }
+    if(found == FALSE)
+    {
+        printf("No Books Found of %s %s ",bookTypeIdentifier, name);
+        getchar();
+        system("clear");
+        numberOfBooks = 0;
+        free(books);
+        return;
+    }
+    foundBooks = (Book*) calloc(numberOfFoundBooks, sizeof(Book));
+    for(int i = 0, k = 0; i < numberOfBooks && k < numberOfFoundBooks;i++)
+    {        
+        Book *book = books + i;
+        char *lName = LowerCase(name), *lB = LowerCase(book->name);
+        switch (type)
+        {
+        case BYNAME:
+            break;
+        case BYAUTHOR:
+            lB = LowerCase(book->author);
+            break;
+        case BYGENRE:
+            lB = LowerCase(book->genre);
+            break;  
+        default:
+            break;
+        }
+        if(strstr(lB, lName) != NULL)
+        {
+            *(foundBooks+k) = *book;
+            k++; 
+        }
+        lB = lName;
+        free(lName);
+    }
+    printf("\n");
+
+    for(int i = 0; i < numberOfFoundBooks; i++)
+    {
+        Book *book = foundBooks + i;
+        printf("Name: %s\nAuthor: %s\nGenre: %s\nPrice: %.2f\nPublished Year: %d\n\n", book->name, book->author, book->genre, book->price, book->publishedYear);
+    }
+
+    AskRemoveBook(foundBooks);
+    system("clear");
+    numberOfBooks = 0;
+    free(books);
 }

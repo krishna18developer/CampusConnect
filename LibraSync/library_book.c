@@ -78,21 +78,21 @@ void byName()
     char *in;
     printf("Enter Name : ");
     scanf(" %[^\n]%*c", in);
-    SearchBookByName(in);
+    SearchBook(in, BYNAME);
 }
 void byAuthor()
 {
     char *in;
     printf("Enter Author : ");
     scanf(" %[^\n]%*c", in);
-    SearchBookByAuthor(in);
+    SearchBook(in, BYAUTHOR);
 }
 void byGenre()
 {
     char *in;
     printf("Enter Genre : ");
     scanf(" %[^\n]%*c", in);
-    SearchBookByGenre(in);
+    SearchBook(in, BYGENRE);
 }
 void InputSearchBook()
 {

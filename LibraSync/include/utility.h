@@ -47,3 +47,4 @@ int ParseCommand(char *command);
 void UpperCase(char *input);
 void wipeOut();
 int takeCommand(char *command);
+char* LowerCase(char *in);

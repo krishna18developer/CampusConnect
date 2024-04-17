@@ -26,3 +26,8 @@
 #define ADDBOOK 11
 #define REMOVEBOOK 12
 #define SEARCHBOOK 13
+
+#define BYNAME 14
+#define BYAUTHOR 15
+#define BYGENRE 16
+

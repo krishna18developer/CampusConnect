@@ -7,6 +7,7 @@
 #include <dirent.h>
 #include <errno.h>
 #include <stddef.h>
+#include <ctype.h>
 
 char locfileName[100];
 char *getFileName(int n, int fileType)
@@ -165,6 +166,21 @@ void UpperCase(char *input)
         *(input+i) = *(input+i) - 32;
       }
    }
+}
+char* LowerCase(char *in)
+{
+    char* output = (char*)calloc(strlen(in),sizeof(char));
+    if(output == NULL)
+    {
+        printf("An Unknow Error Occured While String Conversion!\n");
+        return NULL;
+    }
+    for (int i = 0; *(in+i) !='\0' ; i++) 
+    {
+        *(output+i) = tolower(*(in+i));
+    }
+
+    return (output);
 }
 
 void wipeOut()
