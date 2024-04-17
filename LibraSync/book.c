@@ -5,9 +5,13 @@
 #include "include/constants.h"
 #include <string.h>
 
+int top = -1;
 Book *books = NULL;
-int numberOfBooks = 0;
+Book* foundBooks;
+int numberOfBooks = 0, numberOfFoundBooks = 0;
 char* BOOKFILEINPUTSTRING  = "{Name : %[^\n] },{Author : %[^\n] },{Genre : %[^\n] },{Price : %f },{PublishedYear : %d };\n";
+char* BOOKFILEREMOVALSTRING  = "{Name : %s\n },{Author : %s\n },{Genre : %s\n },{Price : %f },{PublishedYear : %d };\n" ;
+
 void AddBook(Book* book)
 {
     FILE *file;
@@ -24,16 +28,89 @@ void AddBook(Book* book)
     fclose(file);
 }
 
-void RemoveSingleBook(Book *found)
+void RemoveSingleBook()
 {
-    LoadBooks();
-    for(int i = 0; i < numberOfBooks; i++)
-    {
-        
-    }
+    int option = 1;
+    printf("Enter Number Of The Book You Would Like To Remove : ");
+    scanf("%d", &option);
+    RemoveBook(option);
 }
 
-void AskRemoveBook(Book *b)
+void RemoveBook(int option)
+{
+    char rem[300],rem2[300],rem3[300];
+    if(option < 1)
+    {
+        printf("Invalid Option!");
+        getchar();
+        return;
+    }
+    Book *book = foundBooks + --option;
+   // sprintf(rem, BOOKFILEREMOVALSTRING , book->name, book->author, book->genre, book->price, book->publishedYear);
+   // printf("rem {%d}: %s\n", option , rem);
+
+    for(int i = 0; i < numberOfBooks; i++)
+    {
+
+        //book - Found Book - Current Book to be removed
+        //b - total book list at index i
+        FILE *file;
+
+        file = fopen("books.txt", "w");
+        if(file == NULL)
+        {
+            printf("Unable To Remove Books.\nPlease Try Again.\n");
+            return;
+        }
+ 
+        Book *b = books + i;
+        sprintf(rem, BOOKFILEREMOVALSTRING , book->name, book->author, book->genre, book->price, book->publishedYear);
+        sprintf(rem2, BOOKFILEREMOVALSTRING , b->name, b->author, b->genre, b->price, b->publishedYear);
+
+        //printf("rem : %s\nrem2: %s\n", rem,rem2);
+
+        
+        if(strcmp(rem,rem2) == 0)
+        {
+            printf("\n EXEC");
+            //sprintf(rem3, BOOKFILEREMOVALSTRING , book->name, book->author, book->genre, book->price, book->publishedYear);
+            //numberOfBooks--;
+            //printf("%s\n", rem3);
+        }
+        else 
+        {
+           fprintf(file, BOOKFILEINPUTSTRING , b->name, b->author, b->genre, b->price, b->publishedYear);
+           //printf("%s\n", rem3);
+        }
+        
+        fclose(file);
+    }
+    numberOfBooks--;
+}
+
+
+void RemoveMultipleBook()
+{
+    int numberOfBooksToRemove = 1;
+    printf("Enter Number Of The Books You Would Like To Remove : ");
+    scanf("%d", &numberOfBooksToRemove);
+
+    int BooksToRemove[numberOfBooksToRemove];
+
+    int *i = (int*) calloc(numberOfBooksToRemove, sizeof(int));
+
+    printf("Enter Numbers of those books seperated by space\n");
+    for(int i = 0; i < numberOfBooksToRemove; i++)
+    scanf("%d", BooksToRemove + i);
+
+    for(int i = 0; i < numberOfBooksToRemove; i++)
+    RemoveBook(BooksToRemove[i]);
+
+    getchar();
+    getchar();
+}
+
+void AskRemoveBook()
 {
     char option;
     printf("1)Remove Single Book\t\t2)Remove Multiple Books\n3)Remove All The Books\t\tPress Enter To Exit\n");
@@ -42,13 +119,13 @@ void AskRemoveBook(Book *b)
     switch (option)
     {
         case '1':
-        RemoveSingleBook(b);
+        RemoveSingleBook();
         break;
         case '2':
-        RemoveSingleBook(b);
+        RemoveMultipleBook();
         break;
         case '3':
-        RemoveSingleBook(b);
+        RemoveSingleBook();
         break;
         case RETURNCHARACTER:
         default:
@@ -92,7 +169,7 @@ void LoadBooks()
     }
     while(i == 5);
 
-    /*
+    /* STOPPED PRINTING
     for(int i = 0; i < numberOfBooks;i++)
     {
         Book *book = books + i;
@@ -108,8 +185,7 @@ void SearchBook(char* name,int type)
 {
     LoadBooks();
     int found = FALSE;
-    Book* foundBooks;
-    int numberOfFoundBooks = 0;
+    numberOfFoundBooks = 0;
     char *bookTypeIdentifier = "Author";
     
     for(int i = 0; i < numberOfBooks;i++)
@@ -184,8 +260,9 @@ void SearchBook(char* name,int type)
         printf("Name: %s\nAuthor: %s\nGenre: %s\nPrice: %.2f\nPublished Year: %d\n\n", book->name, book->author, book->genre, book->price, book->publishedYear);
     }
 
-    AskRemoveBook(foundBooks);
+    AskRemoveBook();
     system("clear");
     numberOfBooks = 0;
+    foundBooks = books; // FOR FREEING THE FOUNDBOOKS
     free(books);
 }
