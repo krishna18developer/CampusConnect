@@ -18,3 +18,7 @@
  },{Author : George Orwell
   },{Genre : Dystopian
   },{Price : 8.99 },{PublishedYear : 1949 };
+{Name : test
+ },{Author : asdf
+  },{Genre : Fantasy
+   },{Price : 232.000000 },{PublishedYear : 9832 };

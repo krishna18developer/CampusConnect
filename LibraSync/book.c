@@ -7,7 +7,7 @@
 
 Book *books = NULL;
 int numberOfBooks = 0;
-
+char* BOOKFILEINPUTSTRING  = "{Name : %[^\n] },{Author : %[^\n] },{Genre : %[^\n] },{Price : %f },{PublishedYear : %d };\n";
 void AddBook(Book* book)
 {
     FILE *file;
@@ -19,7 +19,7 @@ void AddBook(Book* book)
         return;
     }
  
-    fprintf(file, "{Name : %s },{Author : %s },{Genre : %s },{Price : %f },{PublishedYear : %d };\n", book->name, book->author, book->genre, book->price, book->publishedYear);
+    fprintf(file, BOOKFILEINPUTSTRING , book->name, book->author, book->genre, book->price, book->publishedYear);
     printf("AddedBook!");
     fclose(file);
 }
@@ -87,7 +87,7 @@ void LoadBooks()
     do
     {
         Book *book = books + k;
-        i = fscanf(file, "{Name : %[^\n] },{Author : %[^\n] },{Genre : %[^\n] },{Price : %f },{PublishedYear : %d };\n", book->name, book->author, book->genre, &book->price, &book->publishedYear);
+        i = fscanf(file, BOOKFILEINPUTSTRING, book->name, book->author, book->genre, &book->price, &book->publishedYear);
         k++;
     }
     while(i == 5);
