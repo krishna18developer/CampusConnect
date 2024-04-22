@@ -10,6 +10,11 @@ char *fileInputFormat = "{Name : %[^\n] },{Author : %[^\n] },{Genre : %[^\n] },{
 
 int totalNumberOfBooks = 0;
 
+
+Book* totalBooks, *newSetOfBooks;
+Index* bIndex;
+int numberOfBooks,numberOfNewBooks;
+
 void AddBook(Book bookToBeAdded)
 {
     if(TotalBooks == NULL || totalNumberOfBooks == 0)
@@ -36,8 +41,8 @@ void AddBook(Book bookToBeAdded)
     free(TotalBooks);
     TotalBooks = NewBooks;
 }
-
-void UpdateBooks();
+void returnBook(Book bookToReturn);
+void UpdateBooks()
 {
     if(TotalBooks == NULL)
     {
@@ -124,7 +129,7 @@ int CompareBooks(Book b1, Book b2)
     return nameCheck && authorCheck && genreCheck && priceCheck && publishedCheck;
 }
 
-void RemoveBook(Book bookToBeRemoved);
+void RemoveBook(Book bookToBeRemoved)
 {
     Book* NewBooks = (Book*) calloc((totalNumberOfBooks-1), sizeof(Book));
     int check = 0;

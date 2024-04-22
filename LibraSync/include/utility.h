@@ -6,15 +6,7 @@
 #define UTILITY_H_INCLUDED
 typedef struct
 {
-    int bookCount;
-    int userCount;
-
-    int *books;
-    size_t bookSize;
-
-    int *users;
-    size_t userSize;
-
+    char *data;
 }
 Index;
 
