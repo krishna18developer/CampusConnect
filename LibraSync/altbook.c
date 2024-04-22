@@ -136,11 +136,11 @@ void alt3()
     AddBook(btest1);
     printf("After Adding 1\n");
     printBooksList();
-    //UpdateBooks();
+    UpdateBooks();
     AddBook(btest2);
     printf("After Adding 2\n");
     printBooksList();
-    //UpdateBooks();
+    UpdateBooks();
 
 }
 void alt4()
