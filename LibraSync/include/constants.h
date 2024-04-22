@@ -20,7 +20,7 @@
 
 #define TEST 99
 
-#define MAXINPUTSIZE 50
+#define MAXINPUTSIZE 64
 
 
 #define ADDBOOK 11

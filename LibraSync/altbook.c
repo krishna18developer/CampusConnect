@@ -12,9 +12,10 @@ int totalNumberOfBooks = 0;
 
 void AddBook(Book bookToBeAdded)
 {
-    if(TotalBooks == NULL)
+    if(TotalBooks == NULL || totalNumberOfBooks == 0)
     {
-        Book* NewBook = (Book*) calloc(1,sizeof(Book));
+        printf("AddBook() -> First book.\n");
+        Book* NewBook = (Book*) malloc(1 * sizeof(Book));
         *NewBook = bookToBeAdded;
         TotalBooks = NewBook;
         totalNumberOfBooks = 1;
@@ -31,12 +32,12 @@ void AddBook(Book bookToBeAdded)
         *(NewBooks + i) = *(TotalBooks + i);
     }
     
-    *(NewBooks + ++totalNumberOfBooks) = bookToBeAdded;
+    *(NewBooks + totalNumberOfBooks++) = bookToBeAdded;
     free(TotalBooks);
     TotalBooks = NewBooks;
 }
 
-void UpdateBooks()
+void UpdateBooks();
 {
     if(TotalBooks == NULL)
     {
@@ -73,6 +74,44 @@ void printBooksList()
         printf("Book Published Year : %d\n\n", (TotalBooks + i)->publishedYear);
     }
 }
+void printBooksListTabular()
+{
+    if(TotalBooks == NULL)
+    {
+        printf("No Books Loaded To Display.\n");
+        return;
+    }
+    printf("Number of Books : %d\n\n", totalNumberOfBooks);
+    int k = totalNumberOfBooks % 2 == 0 ? 2 : 1;
+    for(int i = 0; i < totalNumberOfBooks; i+=2, k += k)
+    {
+        for(int j = i; j < k; j++)
+        {
+            printf("Book Name : %s\t\t", (TotalBooks + j)->name);
+        }
+        printf("\n");
+        for(int j = i; j < k; j++)
+        {
+            printf("Book Author : %s\t\t", (TotalBooks + j)->author);
+        }
+        printf("\n");
+        for(int j = i; j < k; j++)
+        {
+            printf("Book Genre : %s\t\t", (TotalBooks + j)->genre);          
+        }
+        printf("\n");
+        for(int j = i; j < k; j++)
+        {
+            printf("Book Price : %f\t\t", (TotalBooks + j)->price);
+        }
+        printf("\n");
+        for(int j = i; j < k; j++)
+        {
+            printf("Book Published Year : %d\t\t", (TotalBooks + j)->publishedYear);
+        }
+        printf("\n\n");            
+    }        
+}
 
 int CompareBooks(Book b1, Book b2)
 {
@@ -85,11 +124,11 @@ int CompareBooks(Book b1, Book b2)
     return nameCheck && authorCheck && genreCheck && priceCheck && publishedCheck;
 }
 
-void RemoveBook(Book bookToBeRemoved)
+void RemoveBook(Book bookToBeRemoved);
 {
-    Book* NewBooks = (Book*) malloc((totalNumberOfBooks-1) * sizeof(Book));
+    Book* NewBooks = (Book*) calloc((totalNumberOfBooks-1), sizeof(Book));
     int check = 0;
-    for(int i = 0, k = 0 ; k < totalNumberOfBooks; i++)
+    for(int i = 0, k = 0 ; i < totalNumberOfBooks; i++)
     {
         if(CompareBooks(*(NewBooks + i), bookToBeRemoved))
         {
@@ -145,27 +184,27 @@ void alt3()
 }
 void alt4()
 {
-    Book btest1 = {"Edoka Book!", "Nene", "Testing", 99.0, 2024};
-    Book btest2 = {"HElosa Book!", "iuttr", "Testing", 85.0, 212024};
-    Book btest3 = {"dsafsaok!", "dsf", "Testing", 43.0, 6743};
+    Book btest1 = {"Edoka Book!", "Nene", "Testing", 99.0f, 2024};
+    Book btest2 = {"HElosa Book!", "iuttr", "Testing", 85.0f, 2124};
+    Book btest3 = {"HElosa Book!", "iuttr", "Testing", 85.0f, 2124};
+    Book btest4 = {"dsafsaok!", "dsf", "Testing", 48.0f, 6743};
+    Book btest5 = {"hdfds!", "jjds", "Testing", 48.0f, 6743};
 
     AddBook(btest1);
     AddBook(btest2);
     AddBook(btest3);
-    
+    AddBook(btest4);
+    //AddBook(btest5);
     UpdateBooks();
-    printBooksList();
+    printBooksListTabular();
 
-    printf("Now delete\n");
-    RemoveBook(btest2);
-    UpdateBooks();
 
-    printBooksList();
-    
+    //RemoveBook(btest2);
+    //printBooksList();
 
 }
 void main()
 {
-    alt3();
+    printf("main\n");
+    alt4();
 }
-

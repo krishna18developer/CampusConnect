@@ -18,23 +18,30 @@ typedef struct
 }
 Index;
 
+
 typedef struct
 {
-    /* data */
+    char UUID[MAXINPUTSIZE];
+    char privilege[MAXINPUTSIZE];
+    char name[MAXINPUTSIZE];
+    char password[MAXINPUTSIZE];
+}
+User;
+
+typedef struct
+{
+    char UUID[MAXINPUTSIZE];
     char name[MAXINPUTSIZE];
     char author [MAXINPUTSIZE];
     char genre[MAXINPUTSIZE];
     float price;
     int publishedYear;
+    int numberOfCopies;
+    int numberOfPeopleBorrowed;
+    User* borrowedPeople;
 }
 Book;
 
-typedef struct
-{
-    /* data */
-    int k;
-}
-User;
 
 #endif 
 
