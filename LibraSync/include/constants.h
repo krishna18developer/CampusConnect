@@ -21,6 +21,7 @@
 #define TEST 99
 
 #define MAXINPUTSIZE 64
+#define UUIDSIZE 37
 
 
 #define ADDBOOK 11

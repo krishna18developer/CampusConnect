@@ -13,19 +13,19 @@ Index;
 
 typedef struct
 {
-    char UUID[MAXINPUTSIZE];
-    char privilege[MAXINPUTSIZE];
-    char name[MAXINPUTSIZE];
-    char password[MAXINPUTSIZE];
+    char *UUID;
+    char *privilege;
+    char *name;
+    char *password;
 }
 User;
 
 typedef struct
 {
-    char UUID[MAXINPUTSIZE];
-    char name[MAXINPUTSIZE];
-    char author [MAXINPUTSIZE];
-    char genre[MAXINPUTSIZE];
+    char *UUID;
+    char *name;
+    char *author;
+    char *genre;
     float price;
     int publishedYear;
     int numberOfCopies;
@@ -39,11 +39,9 @@ Book;
 
 
 
-//void loadData(int dataType, void *in); 
-int loadData(void *data, size_t size,int n,int dataType);
-void saveData(void *data, size_t size,int n,int dataType);
 int ParseCommand(char *command);
 void UpperCase(char *input);
-void wipeOut();
 int takeCommand(char *command);
 char* LowerCase(char *in);
+char* generate_uuid_v4();
+//char* generate_uuid_v4(char*);

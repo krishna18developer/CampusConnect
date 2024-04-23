@@ -8,6 +8,30 @@
 #include <errno.h>
 #include <stddef.h>
 #include <ctype.h>
+#include <stdint.h>
+#include <time.h>
+
+// Generate a random number between 0 and 255
+uint8_t generate_random_byte()
+{
+    return (uint8_t)rand();
+}
+// Generate a UUID version 4
+char* generate_uuid_v4() 
+{
+    //srand((unsigned int)time(NULL));
+    char *uuid_str = (char*) calloc(UUIDSIZE, sizeof(char));
+    //static char uuid_str[UUIDSIZE];
+    // Set version (4) and variant (10xx)
+    sprintf(uuid_str, "%02X%02X%02X%02X-%02X%02X-%02X%02X-%02X%02X-%02X%02X%02X%02X%02X%02X",
+            generate_random_byte(), generate_random_byte(), generate_random_byte(), generate_random_byte(),
+            generate_random_byte(), generate_random_byte(),
+            0x40 | (generate_random_byte() & 0x0F), generate_random_byte() & 0x3F,
+            generate_random_byte(), generate_random_byte(),
+            generate_random_byte(), generate_random_byte(), generate_random_byte(), generate_random_byte(), generate_random_byte(), generate_random_byte());
+
+    return uuid_str;
+}
 
 char locfileName[100];
 char *getFileName(int n, int fileType)
@@ -70,55 +94,6 @@ int directoryExists(const char *path) {
         }
     }
 }
-// When Saving Structure Array, Multiply The Size With Number of Elements
-void saveData(void *data, size_t size,int n,int dataType)
-{
-    if (n <= 0)
-    n = 0;
-
-    char filepath[100];
-    char *fileName = getFileName(n, dataType);
-    char *folderName = getFolderName(dataType);
-    snprintf(filepath, sizeof(filepath), "%s/%s/%s", "data", folderName,fileName);
-    FILE *file = fopen(filepath, "wb");
-    if (file == NULL) 
-    {
-        perror("Error opening file ");
-        printf("%s\n", filepath);
-        return;
-    }
-    fwrite(data, size, 1, file);
-    fclose(file);
-}
-int loadData(void *data, size_t size,int n,int dataType) 
-{
-    if (n <= 0)
-    n = 0;
-
-    char filepath[100];
-    char *fileName = getFileName(n, dataType);
-    char *folderName = getFolderName(dataType);
-    snprintf(filepath, sizeof(filepath), "%s/%s/%s", "data", folderName,fileName);
-    FILE *file = fopen(filepath, "rb");
-    if (file == NULL) 
-    {
-        perror("Error opening file");
-        printf("%s\n", filepath);
-        return -1;
-    }
-    if(dataType == TEST)
-    {
-        Index *in = (Index*) data;
-        fwrite(&in->books, sizeof(in->bookSize), 1, file);
-        fwrite(&in->users, sizeof(in->userSize), 1, file);
-        fwrite(in->books, sizeof(int), in->bookSize, file);
-        return 0;
-    }
-    fread(data, size, 1, file);
-    fclose(file);
-    return 0;
-}
-
 int ParseCommand(char *command)
 {
     int k = DEFAULT;
@@ -182,28 +157,6 @@ char* LowerCase(char *in)
 
     return (output);
 }
-
-void wipeOut()
-{
-    printf("ENTER CONFIRM TO REMOVE ALL THE USER DATA AND CREATE BLANK FILES\n");
-
-    char confirm[8];
-    scanf("%s", confirm);
-
-    UpperCase(confirm);
-    if(strcmp(confirm,"CONFIRM") != 0)
-    {
-        printf("INVALID COMMAND\n");
-        return;
-    }
-
-    Index i = {0};
-
-    saveData(&i, sizeof(Index), 1, INDEX);
-    printf("DESTROYED\n");
-}
-
-
 int takeCommand(char *command)
 {
     printf("\nCommand : ");
