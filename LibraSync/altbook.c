@@ -6,8 +6,7 @@
 #include <time.h>
 
 Book* TotalBooks;
-char *fileOutputFormat = "{Name : %s\n },{Author : %s\n },{Genre : %s\n },{Price : %f },{PublishedYear : %d };\n";
-char *fileInputFormat = "{Name : %[^\n] },{Author : %[^\n] },{Genre : %[^\n] },{Price : %f },{PublishedYear : %d };\n";
+Index* bIndex, UIndex;
 
 int totalNumberOfBooks = 0;
 
@@ -16,15 +15,17 @@ void AddBook(Book bookToBeAdded)
     bookToBeAdded.UUID = generate_uuid_v4();
     if(TotalBooks == NULL || totalNumberOfBooks == 0)
     {
-        printf("AddBook() -> First book.\n");
         Book* NewBook = (Book*) malloc(1 * sizeof(Book));
+        Index* newBIndex = (Index*) malloc(1 * sizeof(Index));
+        newBIndex->data = bookToBeAdded.UUID;
+        bIndex = newBIndex;
         *NewBook = bookToBeAdded;
         TotalBooks = NewBook;
         totalNumberOfBooks = 1;
-        printf("AddBook with UUID : %s\n", bookToBeAdded.UUID);
         return;
     }
     Book* NewBooks = (Book*) calloc((totalNumberOfBooks+1) ,sizeof(Book));
+    Index* newBIndex = (Index*) calloc((totalNumberOfBooks+1), sizeof(Index));
     if(NewBooks == NULL)
     {
         printf("Unable To Allocate Memory For Books.\n");
@@ -33,10 +34,13 @@ void AddBook(Book bookToBeAdded)
     for(int i = 0 ; i < totalNumberOfBooks; i++)
     {
         *(NewBooks + i) = *(TotalBooks + i);
+        (newBIndex + i)->data = (TotalBooks + i)->UUID;
     }
+    (newBIndex + totalNumberOfBooks)->data = bookToBeAdded.UUID;
     *(NewBooks + totalNumberOfBooks++) = bookToBeAdded;
-    printf("AddBook with UUID : %s\n", bookToBeAdded.UUID);
     free(TotalBooks);
+    free(bIndex);
+    bIndex = newBIndex;
     TotalBooks = NewBooks;
 }
 
@@ -47,17 +51,21 @@ void UpdateBooks()
         printf("Unable To Update The Books.\nPlease Try Again.");
         return;
     }
-    for(int i = 0; i < totalNumberOfBooks; i++)
+    FILE* IFile;
+    IFile = fopen("data/BIndex.txt","w");
+    for(int i = 0; i < totalNumberOfBooks; i++) // 0 < 2
     {
         FILE* file;
-        char fileName[UUIDSIZE+6];
-        sprintf(fileName, "B-%s.txt", (TotalBooks + i)->UUID);
+        char fileName[UUIDSIZE+11];
+        sprintf(fileName, "data/B-%s.txt", (TotalBooks + i)->UUID);
         file = fopen(fileName, "w");
         if(file == NULL)
         {
             printf("Unable To Update The Book with UUID : %s.\nPlease Try Again.", (TotalBooks + i)->UUID);
             return;
         }
+        fprintf(IFile,"%s\n", (bIndex+i)->data);
+
         fprintf(file, "%s\n", (TotalBooks+i)->UUID);
         fprintf(file, "%s\n", (TotalBooks+i)->name);
         fprintf(file, "%s\n", (TotalBooks+i)->author);
@@ -72,10 +80,60 @@ void UpdateBooks()
         }
         fclose(file);
     }
+    fclose(IFile);
 }
+void LoadBooks()
+{
+    totalNumberOfBooks = 0;
+    FILE *fp = fopen("data/BIndex.txt", "r");
+    char c;
+    for (c = getc(fp); c != EOF; c = getc(fp))
+        if (c == '\n') // Increment count if this character is newline
+        totalNumberOfBooks += 1;
+
+    printf("totalNumberOFBooks : %d\n", totalNumberOfBooks);
+    rewind(fp);
+    if(totalNumberOfBooks <= 0)
+    {
+        return;
+    }
+    bIndex = (Index*) calloc(totalNumberOfBooks, sizeof(Index));
+    TotalBooks = (Book*) calloc(totalNumberOfBooks, sizeof(Book));
+    for(int i = 0; i < totalNumberOfBooks; i++)
+    {
+        (bIndex+i)->data = (char*) calloc(UUIDSIZE, sizeof(char));
+        fscanf(fp , "%s\n", (bIndex+i)->data);
+        char fileName[UUIDSIZE+11];
+        sprintf(fileName, "data/B-%s.txt", (bIndex+i)->data);
+        printf("fileName: %s\n", fileName);
+        FILE* file = fopen(fileName, "r");
+        
+        (TotalBooks+i)->borrowedPeople = (User*) calloc(3,sizeof(User));
+
+
+        fscanf("%[^\n]%[^\n]%[^\n]%[^\n]%f\n%d\n%d\n%d\n[^\n]%[^\n]%[^\n]", 
+            (TotalBooks+i)->UUID,
+            (TotalBooks+i)->name,
+            (TotalBooks+i)->author,
+            (TotalBooks+i)->genre,
+            (TotalBooks+i)->price,
+            (TotalBooks+i)->publishedYear,
+            (TotalBooks+i)->numberOfCopies,
+            (TotalBooks+i)->numberOfPeopleBorrowed,
+            ((TotalBooks+i)->borrowedPeople + 0)->UUID,
+            ((TotalBooks+i)->borrowedPeople + 1)->UUID,
+            ((TotalBooks+i)->borrowedPeople + 2)->UUID
+        );
+  
+        fclose(file);
+    }
+}
+
+
+
 void printBook(Book *book)
 {
-    printf("Book UUID : %s\n", book->UUID);
+    printf("\n\nBook UUID : %s\n", book->UUID);
     printf("Book Name : %s\n", book->name);
     printf("Book Author : %s\n", book->author);
     printf("Book Genre : %s\n", book->genre);
@@ -86,6 +144,13 @@ void printBook(Book *book)
     for (int j = 0; j < book->numberOfPeopleBorrowed; j++)
     {
         printf("Book Borrowed by : %s\n", (book->borrowedPeople + j)->UUID);
+    }
+}
+void printBookIndex()
+{
+    for (int j = 0; j < totalNumberOfBooks; j++)
+    {
+        printf("%d : %s\n", j, (bIndex + j)->data);
     }
 }
 void printBooksList()
@@ -137,7 +202,6 @@ void RemoveBook(Book bookToBeRemoved)
 }
 void alt5()
 {
-    printf("alt5\n");
     Book btest1;
     btest1.name = "Edokati";
     btest1.author = "author";
@@ -150,16 +214,17 @@ void alt5()
     (btest1.borrowedPeople + 0)->UUID = generate_uuid_v4();
     (btest1.borrowedPeople + 1)->UUID = generate_uuid_v4();
     (btest1.borrowedPeople + 2)->UUID = generate_uuid_v4();
-    printf("b1 : %s\nb2 : %s\n", (btest1.borrowedPeople + 0)->UUID,(btest1.borrowedPeople + 1)->UUID);
-    printf("alt5\n");;
-
     AddBook(btest1);
-    printBooksList();
+    //printBooksList();
     UpdateBooks();
+
 }
 void main()
 {
     srand((unsigned int)time(NULL)); 
     printf("main\n");
-    alt5();
+    //alt5();
+
+    LoadBooks();
+    printBooksList();
 }
