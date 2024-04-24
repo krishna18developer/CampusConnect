@@ -16,6 +16,7 @@ typedef struct
     char *privilege;
     char *name;
     char *password;
+    int rollnumber;
 }
 User;
 
@@ -44,5 +45,6 @@ int takeCommand(char *command);
 char* LowerCase(char *in);
 char* generate_uuid_v4();
 void memallocBook(Book*);
+void memallocUser(User*);
 void clearScreen();
 //char* generate_uuid_v4(char*);

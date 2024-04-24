@@ -155,6 +155,22 @@ int ParseCommand(char *command)
     {
         k = ALLBOOK;
     }
+    else if(strcmp(command, "ADDUSER") == 0 || strcmp(command, "USERADD") == 0 )
+    {
+        k = ADDUSER;
+    }
+     else if(strcmp(command, "REMOVEUSER") == 0 || strcmp(command, "USERREMOVE") == 0 )
+    {
+        k = REMOVEUSER;
+    }
+     else if(strcmp(command, "SEARCHUSER") == 0 || strcmp(command, "USERSEARCH") == 0)
+    {
+        k = SEARCHUSER;
+    }
+     else if(strcmp(command, "ALLUSER") == 0 || strcmp(command, "USERALL") == 0)
+    {
+        k = ALLUSER;
+    }
     return k;
 }
 
@@ -202,4 +218,10 @@ void memallocBook(Book *b)
     {
         (b->borrowedPeople + i )->UUID = (char*)calloc(UUIDSIZE , sizeof(char));
     }
+}
+void memallocUser(User *b)
+{
+    b->name = (char*)calloc(MAXINPUTSIZE, sizeof(char));
+    b->privilege = (char*)calloc(MAXINPUTSIZE, sizeof(char));
+    b->password = (char*)calloc(MAXINPUTSIZE, sizeof(char));
 }

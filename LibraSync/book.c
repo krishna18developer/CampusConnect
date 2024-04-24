@@ -123,7 +123,7 @@ void LoadBooks()
             printf("Unable To Open Book File.\nPlease Try Again\n");
             return;            
         }
-        (TotalBooks+i)->UUID = (char*) calloc(MAXINPUTSIZE, sizeof(char));
+        (TotalBooks+i)->UUID = (char*) calloc(UUIDSIZE, sizeof(char));
         (TotalBooks+i)->name = (char*) calloc(MAXINPUTSIZE, sizeof(char));
         (TotalBooks+i)->author = (char*) calloc(MAXINPUTSIZE, sizeof(char));
         (TotalBooks+i)->genre = (char*) calloc(MAXINPUTSIZE, sizeof(char));
@@ -158,7 +158,7 @@ void printBook(Book *book)
     printf("Book Name : %s\n", book->name);
     printf("Book Author : %s\n", book->author);
     printf("Book Genre : %s\n", book->genre);
-    printf("Book Price : ₹ %.2f\n", book->price);
+    printf("Book Price : %.2f INR\n", book->price);
     printf("Book Published Year : %d\n", book->publishedYear);
     printf("Book Copies : %d\n", book->numberOfCopies);
     printf("Book Borrowed Number : %d\n", book->numberOfPeopleBorrowed);
@@ -192,13 +192,14 @@ void printBooksList()
 
 int CompareBooks(Book b1, Book b2)
 {
+    int UUIDCheck = (strcmp(b1.UUID,b2.UUID) == 0) ? TRUE: FALSE;
     int nameCheck = (strcmp(b1.name,b2.name) == 0) ? TRUE: FALSE;
     int authorCheck = (strcmp(b1.author,b2.author) == 0) ? TRUE: FALSE;
     int genreCheck = (strcmp(b1.genre,b2.genre) == 0) ? TRUE: FALSE;
     int priceCheck = b1.price == b2.price ? TRUE : FALSE;
     int publishedCheck = b1.publishedYear == b2.publishedYear ? TRUE : FALSE;
 
-    return nameCheck && authorCheck && genreCheck && priceCheck && publishedCheck;
+    return UUIDCheck && nameCheck && authorCheck && genreCheck && priceCheck && publishedCheck;
 }
 
 void RemoveBook(Book bookToBeRemoved)
@@ -237,25 +238,6 @@ void RemoveBook(Book bookToBeRemoved)
     free(bIndex);
     bIndex = newBIndex;
     TotalBooks = NewSetOfBooks;    
-}
-void alt5()
-{
-    Book btest1;
-    btest1.name = "Edokati";
-    btest1.author = "author";
-    btest1.genre = "genre";
-    btest1.price = 99.0f;
-    btest1.publishedYear = 2024;
-    btest1.numberOfCopies = 10;
-    btest1.numberOfPeopleBorrowed = 3;
-    btest1.borrowedPeople = (User*) calloc(btest1.numberOfPeopleBorrowed,sizeof(User));
-    (btest1.borrowedPeople + 0)->UUID = generate_uuid_v4();
-    (btest1.borrowedPeople + 1)->UUID = generate_uuid_v4();
-    (btest1.borrowedPeople + 2)->UUID = generate_uuid_v4();
-    AddBook(btest1);
-    //printBooksList();
-    UpdateBooks();
-
 }
 
 void AskBookDetailsForAdding()
@@ -357,11 +339,99 @@ void SearchBook(char* name,int type)
         printf("%d)", i + 1);
         printBook(foundBooks + i);
     }
-    AskRemoveBook(FALSE);
+    int optionMenu = 1;
+    printf("1)Remove Menu\t\t2)Borrow Menu\n");
+    scanf(" %d", &optionMenu);
+    switch (optionMenu)
+    {
+    
+    case 2:
+        AskBorrowBook(FALSE);
+        break;
+    
+    
+    default:
+        case 1:
+            AskRemoveBook(FALSE);
+            break;
+
+    }
+    //AskRemoveBook(FALSE);
     //clearScreen();
     numberOfFoundBooks = 0; // FOR FREEING THE FOUNDBOOKS
     free(foundBooks);
 }
+
+
+void AskBorrowBook(int all)
+{
+    if(all == TRUE)
+    {
+        LoadBooks();
+
+        free(foundBooks);
+        foundBooks = TotalBooks;
+        numberOfFoundBooks = totalNumberOfBooks;
+        printBooksList();
+        getchar();
+    }
+    char option;
+    
+    
+
+
+    printf("1)Remove Single Book\t\t2)Borrow Multiple Books\t\tPress Enter To Exit\n");
+    option = getchar();
+
+    switch (option)
+    {
+        case '1':
+        BorrowSingleBook();
+        break;
+
+        case '2':
+        BorrowMultipleBook();
+        break;
+
+        case RETURNCHARACTER:
+        default:
+        break;
+    }
+}
+
+
+void BorrowSingleBook()
+{
+    printf("Enter The Number Of Book You Would Like To Borrow : ");
+    int option;
+    scanf("%d", &option);
+    if(option < 1 || option > numberOfFoundBooks)
+    {
+        printf("Invalid Option Entered!\n");
+        return;
+    }
+    option--;
+
+    Book b = *(foundBooks + option);
+
+    RemoveBook(b);
+    UpdateBooks();
+    printf("Deleted Book\n");
+}
+void BorrowMultipleBook()
+{
+
+}
+
+
+
+void BorrowBook(Book bookToBorrow)
+{
+
+}
+
+
+
 void AskRemoveBook(int all)
 {
     if(all == TRUE)
@@ -481,7 +551,7 @@ void RemoveAllBooks()
     }
 }
 
-void byName()
+void BookbyName()
 {
     char *in = calloc(MAXINPUTSIZE, sizeof(char));
     printf("Enter Name : ");
@@ -489,7 +559,7 @@ void byName()
     SearchBook(in, BYNAME);
     free(in);
 }
-void byAuthor()
+void BookbyAuthor()
 {
     char *in = calloc(MAXINPUTSIZE, sizeof(char));
     printf("Enter Author : ");
@@ -497,7 +567,7 @@ void byAuthor()
     SearchBook(in, BYAUTHOR);
     free(in);
 }
-void byGenre()
+void BookbyGenre()
 {
     char *in = calloc(MAXINPUTSIZE, sizeof(char));
     printf("Enter Genre : ");
@@ -514,13 +584,13 @@ void InputSearchBook()
     switch (option)
     {
     case 1:
-        byName();
+        BookbyName();
         break;
     case 2:
-        byAuthor();
+        BookbyAuthor();
         break;
     case 3:
-        byGenre();
+        BookbyGenre();
         break;
     default:
         break;

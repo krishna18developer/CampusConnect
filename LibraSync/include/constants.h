@@ -32,3 +32,12 @@
 #define BYNAME 15
 #define BYAUTHOR 16
 #define BYGENRE 17
+
+#define BYROLLNUMBER 18
+#define BYUUID 19
+
+
+#define ADDUSER 20
+#define REMOVEUSER 21
+#define SEARCHUSER 22
+#define ALLUSER 23

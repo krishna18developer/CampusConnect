@@ -11,10 +11,14 @@ void AskRemoveBook(int);
 void RemoveBook(Book);
 void AskBookDetailsForAdding();
 void SearchBook(char*,int);
-void byName();
-void byAuthor();
-void byGenre();
+void BookbyName();
+void BookbyAuthor();
+void BookbyGenre();
 void InputSearchBook();
 void RemoveSingleBook();
 void RemoveMultipleBook();
 void RemoveAllBooks();
+
+void AskBorrowBook(int);
+void BorrowSingleBook();
+void BorrowMultipleBook();
