@@ -10,7 +10,6 @@ typedef struct
 }
 Index;
 
-
 typedef struct
 {
     char *UUID;
