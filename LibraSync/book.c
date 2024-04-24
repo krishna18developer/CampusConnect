@@ -420,22 +420,19 @@ void BorrowSingleBook()
     }
     option--;
 
-    Book b = *(foundBooks + option);
-
-    BorrowBook(b);
+    BorrowBook(foundBooks + option);
     UpdateBooks();
-    printf("Borrowed Book\n");
 }
 void BorrowMultipleBook()
 {
 
 }
 
-void BorrowBook(Book bookToBorrow)
+void BorrowBook(Book *bookToBorrow)
 {
     printf("DEBUG() -> Before.\n");
 
-    if(bookToBorrow.borrowedPeople == NULL)
+    if(bookToBorrow->borrowedPeople == NULL)
     {
         printf("NULLER\n");
         if(getSelectedUser() == NULL)
@@ -443,21 +440,23 @@ void BorrowBook(Book bookToBorrow)
             printf("Select User And try again.\n");
             return;
         }
-        bookToBorrow.borrowedPeople = getSelectedUser();
-        bookToBorrow.numberOfPeopleBorrowed = 1;
+        bookToBorrow->borrowedPeople = getSelectedUser();
+
+        printBook(&bookToBorrow);
+        bookToBorrow->numberOfPeopleBorrowed = 1;
         return;
     }
     
-    User* newPeople = (User*) calloc(bookToBorrow.numberOfPeopleBorrowed + 1, sizeof(User));
+    User* newPeople = (User*) calloc(bookToBorrow->numberOfPeopleBorrowed + 1, sizeof(User));
 
     for(int i = 0 ; i < totalNumberOfBooks; i++)
     {
-        *(newPeople + i) = *(bookToBorrow.borrowedPeople + i);
+        *(newPeople + i) = *(bookToBorrow->borrowedPeople + i);
     }
     *(newPeople + totalNumberOfBooks++) = *(getSelectedUser());
-    free(bookToBorrow.borrowedPeople);
+    free(bookToBorrow->borrowedPeople);
     free(bIndex);
-    bookToBorrow.borrowedPeople = newPeople;
+    bookToBorrow->borrowedPeople = newPeople;
     printf("DEBUG() -> Borrowed.\n");
 }
 
