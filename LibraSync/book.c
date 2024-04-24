@@ -357,14 +357,25 @@ void SearchBook(char* name,int type)
         printf("%d)", i + 1);
         printBook(foundBooks + i);
     }
-    AskRemoveBook();
+    AskRemoveBook(FALSE);
     //system("clear");
     numberOfFoundBooks = 0; // FOR FREEING THE FOUNDBOOKS
     free(foundBooks);
 }
-void AskRemoveBook()
+void AskRemoveBook(int all)
 {
+    if(all == TRUE)
+    {
+        LoadBooks();
+
+        free(foundBooks);
+        foundBooks = TotalBooks;
+        numberOfFoundBooks = totalNumberOfBooks;
+        printBooksList();
+        getchar();
+    }
     char option;
+    
     printf("1)Remove Single Book\t\t2)Remove Multiple Books\n3)Remove All The Books\t\tPress Enter To Exit\n");
     option = getchar();
 
@@ -410,6 +421,7 @@ void RemoveSingleBook()
 void RemoveMultipleBook()
 {
     int numberOfBooksToRemove = 1;
+    printf("DEBUG() -> Number of found Books - %d\n", numberOfFoundBooks);
     printf("Enter Number Of The Books You Would Like To Remove : ");
     scanf("%d", &numberOfBooksToRemove);
 

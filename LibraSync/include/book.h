@@ -7,7 +7,7 @@ void printBook(Book*);
 void printBookIndex();
 void printBooksList();
 int CompareBooks(Book,Book);
-void AskRemoveBook();
+void AskRemoveBook(int);
 void RemoveBook(Book);
 void AskBookDetailsForAdding();
 void SearchBook(char*,int);

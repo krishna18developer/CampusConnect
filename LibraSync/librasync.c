@@ -104,7 +104,7 @@ void bookMenu()
             break;
 
             case REMOVEBOOK:
-            printf("Remove !!!!!!\n");
+            AskRemoveBook(TRUE);
             break;
 
             case SEARCHBOOK:
