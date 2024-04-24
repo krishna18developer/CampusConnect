@@ -1,13 +1,20 @@
 #include "utility.h"
 
-void AddBook(Book*);
-void SearchBookByName(char*);
-void SearchBookByAuthor(char*);
-void SearchBookByGenre(char*);
+void AddBook(Book);
+void UpdateBooks();
 void LoadBooks();
+void printBook(Book*);
+void printBookIndex();
+void printBooksList();
+int CompareBooks(Book,Book);
 void AskRemoveBook();
-void RemoveBook(int);
+void RemoveBook(Book);
+void AskBookDetailsForAdding();
+void SearchBook(char*,int);
+void byName();
+void byAuthor();
+void byGenre();
+void InputSearchBook();
 void RemoveSingleBook();
 void RemoveMultipleBook();
 void RemoveAllBooks();
-void SearchBook(char* name,int type);
