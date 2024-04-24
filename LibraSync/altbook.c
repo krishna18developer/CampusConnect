@@ -86,9 +86,14 @@ void LoadBooks()
 {
     totalNumberOfBooks = 0;
     FILE *fp = fopen("data/BIndex.txt", "r");
+    if(fp == NULL)
+    {
+        printf("Unable To Retrieve Books Index.\nPlease Try Again\n");
+        return;
+    }
     char c;
     for (c = getc(fp); c != EOF; c = getc(fp))
-        if (c == '\n') // Increment count if this character is newline
+        if (c == '\n')
         totalNumberOfBooks += 1;
 
     printf("totalNumberOFBooks : %d\n", totalNumberOfBooks);
@@ -99,6 +104,7 @@ void LoadBooks()
     }
     bIndex = (Index*) calloc(totalNumberOfBooks, sizeof(Index));
     TotalBooks = (Book*) calloc(totalNumberOfBooks, sizeof(Book));
+
     for(int i = 0; i < totalNumberOfBooks; i++)
     {
         (bIndex+i)->data = (char*) calloc(UUIDSIZE, sizeof(char));
@@ -107,24 +113,34 @@ void LoadBooks()
         sprintf(fileName, "data/B-%s.txt", (bIndex+i)->data);
         printf("fileName: %s\n", fileName);
         FILE* file = fopen(fileName, "r");
-        
-        (TotalBooks+i)->borrowedPeople = (User*) calloc(3,sizeof(User));
-
-
-        fscanf("%[^\n]%[^\n]%[^\n]%[^\n]%f\n%d\n%d\n%d\n[^\n]%[^\n]%[^\n]", 
+        if(file == NULL)
+        {
+            printf("Unable To Open Book File.\nPlease Try Again\n");
+            return;            
+        }
+        (TotalBooks+i)->UUID = (char*) calloc(MAXINPUTSIZE, sizeof(char));
+        (TotalBooks+i)->name = (char*) calloc(MAXINPUTSIZE, sizeof(char));
+        (TotalBooks+i)->author = (char*) calloc(MAXINPUTSIZE, sizeof(char));
+        (TotalBooks+i)->genre = (char*) calloc(MAXINPUTSIZE, sizeof(char));
+        char *format1 = "%[^\n]\n%[^\n]\n%[^\n]\n%[^\n]\n%f\n%d\n%d\n%d\n";
+        char *format2 = "%s\n%s\n%s\n%s\n%f\n%d\n%d\n%d\n";
+        fscanf(file, format1, 
             (TotalBooks+i)->UUID,
             (TotalBooks+i)->name,
             (TotalBooks+i)->author,
             (TotalBooks+i)->genre,
-            (TotalBooks+i)->price,
-            (TotalBooks+i)->publishedYear,
-            (TotalBooks+i)->numberOfCopies,
-            (TotalBooks+i)->numberOfPeopleBorrowed,
-            ((TotalBooks+i)->borrowedPeople + 0)->UUID,
-            ((TotalBooks+i)->borrowedPeople + 1)->UUID,
-            ((TotalBooks+i)->borrowedPeople + 2)->UUID
+            &(TotalBooks+i)->price,
+            &(TotalBooks+i)->publishedYear,
+            &((TotalBooks+i)->numberOfCopies),
+            &((TotalBooks+i)->numberOfPeopleBorrowed)
         );
-  
+        int numberOfPeopleBorrowed = (TotalBooks+i)->numberOfPeopleBorrowed;
+        (TotalBooks+i)->borrowedPeople = (User*) calloc(numberOfPeopleBorrowed,sizeof(User));
+        for (int j = 0; j < numberOfPeopleBorrowed; j++)
+        {
+            ((TotalBooks + i)->borrowedPeople + j )->UUID = (char*)calloc(UUIDSIZE , sizeof(char));
+            fscanf(file, "%s\n", ((TotalBooks + i)->borrowedPeople + j )->UUID);
+        }
         fclose(file);
     }
 }
@@ -138,9 +154,9 @@ void printBook(Book *book)
     printf("Book Author : %s\n", book->author);
     printf("Book Genre : %s\n", book->genre);
     printf("Book Price : %f\n", book->price);
+    printf("Book Published Year : %d\n", book->publishedYear);
     printf("Book Copies : %d\n", book->numberOfCopies);
     printf("Book Borrowed Number : %d\n", book->numberOfPeopleBorrowed);
-    printf("Book Published Year : %d\n", book->publishedYear);
     for (int j = 0; j < book->numberOfPeopleBorrowed; j++)
     {
         printf("Book Borrowed by : %s\n", (book->borrowedPeople + j)->UUID);
@@ -223,6 +239,7 @@ void main()
 {
     srand((unsigned int)time(NULL)); 
     printf("main\n");
+    //alt5();
     //alt5();
 
     LoadBooks();
