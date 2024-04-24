@@ -11,6 +11,28 @@
 #include <stdint.h>
 #include <time.h>
 
+
+
+void clearScreen()
+{
+    char *clearcommand;
+#ifdef _WIN32 
+    clearcommand = "cls";
+  
+// Checking for mac OS with 
+// __APPLE__ macro 
+#elif __APPLE__ 
+    clearcommand = "clear";
+  
+// Checking for linux OS with 
+// __linux__ macro 
+#elif __linux__ 
+    clearcommand = "clear";
+
+#endif
+    system(clearcommand);
+}
+
 // Generate a random number between 0 and 255
 uint8_t generate_random_byte()
 {

@@ -16,21 +16,7 @@ int main()
 {
     srand((unsigned int)time(NULL)); 
 
-    //system("clear"); //Used For Clearing Screen, Only works when stdlib.h is included
-#ifdef _WIN32 
-    clearcommand = "cls";
-  
-// Checking for mac OS with 
-// __APPLE__ macro 
-#elif __APPLE__ 
-    clearcommand = "clear";
-  
-// Checking for linux OS with 
-// __linux__ macro 
-#elif __linux__ 
-    clearcommand = "clear";
-
-#endif
+    //clearScreen(); //Used For Clearing Screen, Only works when stdlib.h is included
     char command [COMMAND_MAX_SIZE];
 
     mainMenu(CLEAR_SCREEN);
@@ -52,7 +38,7 @@ int main()
             break;
 
             case CLEAR:
-            system(clearcommand);
+            clearScreen();
             break;
 
             case MAINMENU:
@@ -87,7 +73,7 @@ void greeting()
 void mainMenu(int clear)
 {
     if(clear == CLEAR_SCREEN)
-    system(clearcommand);
+    clearScreen();
 
     greeting();
     printf("\t     CODE\t\t\tFUNCTION\n");
@@ -101,7 +87,7 @@ void bookMenu()
     //LoadBooks();
     int k = 0;
     char command [COMMAND_MAX_SIZE];
-    system(clearcommand);
+    clearScreen();
     do
     {
         printf("\n\n");
@@ -130,11 +116,11 @@ void bookMenu()
             printBooksList();
             getchar();
             getchar();
-            system(clearcommand);
+            clearScreen();
             break;
 
             case CLEAR:
-            system(clearcommand);
+            clearScreen();
             break;
 
             case MAINMENU:

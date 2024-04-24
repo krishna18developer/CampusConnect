@@ -321,7 +321,7 @@ void SearchBook(char* name,int type)
     {
         printf("No Books Found of %s %s ",bookTypeIdentifier, name);
         getchar();
-        system("clear");
+        clearScreen();
         return;
     }
     foundBooks = (Book*) calloc(numberOfFoundBooks, sizeof(Book));
@@ -358,7 +358,7 @@ void SearchBook(char* name,int type)
         printBook(foundBooks + i);
     }
     AskRemoveBook(FALSE);
-    //system("clear");
+    //clearScreen();
     numberOfFoundBooks = 0; // FOR FREEING THE FOUNDBOOKS
     free(foundBooks);
 }
