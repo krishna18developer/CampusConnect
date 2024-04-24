@@ -21,6 +21,7 @@
 #define TEST 99
 
 #define MAXINPUTSIZE 64
+#define MAXROLLNUMBERSIZE 4
 #define UUIDSIZE 37
 
 
@@ -41,3 +42,5 @@
 #define REMOVEUSER 21
 #define SEARCHUSER 22
 #define ALLUSER 23
+
+#define BYPRIVILEGELEVEL 24

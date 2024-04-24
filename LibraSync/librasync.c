@@ -14,6 +14,8 @@ int takeCommand(char *);
 int exitClearance = FALSE;
 char *clearcommand;
 
+User *selectedUser = NULL;
+
 int main()
 {
     srand((unsigned int)time(NULL)); 
