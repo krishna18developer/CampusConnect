@@ -101,7 +101,7 @@ void LoadBooks()
         if (c == '\n')
         totalNumberOfBooks += 1;
 
-    printf("DEBUG() -> totalNumberOFBooks : %d\n", totalNumberOfBooks);
+    ////printf("DEBUG() -> totalNumberOFBooks : %d\n", totalNumberOfBooks);
     rewind(fp);
     if(totalNumberOfBooks <= 0)
     {
@@ -116,7 +116,7 @@ void LoadBooks()
         fscanf(fp , "%s\n", (bIndex+i)->data);
         char fileName[UUIDSIZE+11];
         sprintf(fileName, "data/B-%s.txt", (bIndex+i)->data);
-        printf("DEBUG() -> fileName: %s\n", fileName);
+        ////printf("DEBUG() -> fileName: %s\n", fileName);
         FILE* file = fopen(fileName, "r");
         if(file == NULL)
         {
@@ -149,7 +149,6 @@ void LoadBooks()
         fclose(file);
     }
 }
-
 
 
 void printBook(Book *book)
@@ -204,14 +203,14 @@ int CompareBooks(Book b1, Book b2)
 
 void RemoveBook(Book bookToBeRemoved)
 {
-    printf("DEBUG() -> RemoveBook()\n");
+    //printf("DEBUG() -> RemoveBook()\n");
     printBook(&bookToBeRemoved);
     
-    printf("DEBUG() -> n - %d\n", totalNumberOfBooks);
+    //printf("DEBUG() -> n - %d\n", totalNumberOfBooks);
     Book* NewSetOfBooks = (Book*) calloc((totalNumberOfBooks-1), sizeof(Book));
     Index* newBIndex = (Index*) calloc((totalNumberOfBooks-1), sizeof(Index));
     
-    printf("DEBUG() -> RemoveBook()\n");
+    //printf("DEBUG() -> RemoveBook()\n");
     if(NewSetOfBooks == NULL)
     {
         printf("Unable To Remove The Book.\n");
@@ -410,27 +409,64 @@ void RemoveSingleBook()
 
 void RemoveMultipleBook()
 {
-    printf("Enter The Number Of Book You Would Like To Remove : ");
-    int option;
-    scanf("%d", &option);
-    if(option <= 1)
+    int numberOfBooksToRemove = 1;
+    printf("Enter Number Of The Books You Would Like To Remove : ");
+    scanf("%d", &numberOfBooksToRemove);
+
+    int BooksToRemove[numberOfBooksToRemove];
+
+    int *i = (int*) calloc(numberOfBooksToRemove, sizeof(int));
+
+    printf("Enter Numbers of those books seperated by space\n");
+    for(int i = 0; i < numberOfBooksToRemove; i++)
     {
-        printf("Invalid Option Entered!\n");
-        return;
+        int option;
+        scanf("%d", &option);
+        if(option < 1 || option > numberOfFoundBooks)
+        {
+            printf("Invalid Option Enter Again.\n");
+            i--;
+            continue;
+        }
+        BooksToRemove[i] = --option;
     }
-    option--;
+    
+
+    for(int i = 0; i < numberOfBooksToRemove; i++)
+    {
+        Book b = *(foundBooks + BooksToRemove[i]);
+        RemoveBook(b);
+    }
+
+    UpdateBooks();
+
+    getchar();
+    getchar();
 }
 void RemoveAllBooks()
 {
-    printf("Enter The Number Of Book You Would Like To Remove : ");
-    int option;
-    scanf("%d", &option);
-    if(option <= 1)
+    char option[10];
+    printf("Are You Sure You Want To Remove All The Books Data Present?\nEnter 'DELETE' To Erase All Books\n");
+    getchar();
+    scanf("%s", option);
+    if(strstr(option, "DELETE") != NULL)
     {
-        printf("Invalid Option Entered!\n");
-        return;
+        FILE *file;
+
+        file = fopen("data/BIndex.txt", "w");
+        if(file == NULL)
+        {
+            printf("Unable To Remove Books Data.\nPlease Try Again.\n");
+            return;
+        }
+        fclose(file);
+        printf("Deleted All The Books Data Successfully!");
+        getchar();
     }
-    option--;
+    else
+    {
+        printf("Wrong Confirmation Code!\nDid Not Delete The Books Data!\n");
+    }
 }
 
 void byName()
