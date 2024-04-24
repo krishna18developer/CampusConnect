@@ -165,3 +165,15 @@ int takeCommand(char *command)
     UpperCase(command);
     return ParseCommand(command);
 }
+
+void memallocBook(Book *b)
+{
+    b->name = (char*)calloc(MAXINPUTSIZE, sizeof(char));
+    b->author = (char*)calloc(MAXINPUTSIZE, sizeof(char));
+    b->genre = (char*)calloc(MAXINPUTSIZE, sizeof(char));
+
+    for(int i = 0 ; i < b->numberOfPeopleBorrowed; i++)
+    {
+        (b->borrowedPeople + i )->UUID = (char*)calloc(UUIDSIZE , sizeof(char));
+    }
+}

@@ -5,7 +5,7 @@
 #include "include/constants.h"
 #include <time.h>
 
-Book* TotalBooks;
+Book* TotalBooks, *foundBooks;
 Index* bIndex, UIndex;
 
 int totalNumberOfBooks = 0;
@@ -85,6 +85,10 @@ void UpdateBooks()
 void LoadBooks()
 {
     totalNumberOfBooks = 0;
+    if(TotalBooks!=NULL)
+    {
+        free(TotalBooks);
+    }
     FILE *fp = fopen("data/BIndex.txt", "r");
     if(fp == NULL)
     {
@@ -153,7 +157,7 @@ void printBook(Book *book)
     printf("Book Name : %s\n", book->name);
     printf("Book Author : %s\n", book->author);
     printf("Book Genre : %s\n", book->genre);
-    printf("Book Price : %f\n", book->price);
+    printf("Book Price : ₹ %.2f\n", book->price);
     printf("Book Published Year : %d\n", book->publishedYear);
     printf("Book Copies : %d\n", book->numberOfCopies);
     printf("Book Borrowed Number : %d\n", book->numberOfPeopleBorrowed);
@@ -235,13 +239,168 @@ void alt5()
     UpdateBooks();
 
 }
-void main()
+
+void AskBookDetailsForAdding()
 {
+    Book b;
+    b.numberOfPeopleBorrowed = 0;
+    memallocBook(&b);
+    printf("Enter Book Name: ");
+    scanf(" %[^\n]", b.name);
+    printf("Enter Book Author: ");
+    scanf(" %[^\n]", b.author);
+    printf("Enter Book Genre: ");
+    scanf(" %[^\n]", b.genre);
+    printf("Enter Book Price: ");
+    scanf("%f", &b.price);
+    printf("Enter Book Published Year: ");
+    scanf("%d", &b.publishedYear);
+    printf("Enter Book Copies: ");
+    scanf("%d", &b.numberOfCopies);
+    
+    AddBook(b);
+    
+}
+
+
+void SearchBook(char* name,int type)
+{
+    LoadBooks();
+    int found = FALSE;
+    int numberOfFoundBooks = 0;
+    char *bookTypeIdentifier = "Author";
+    
+    for(int i = 0; i < totalNumberOfBooks;i++)
+    {
+        
+        Book *book = TotalBooks + i;
+        char *lName = LowerCase(name), *lB = LowerCase(book->name);
+        switch (type)
+        {
+        case BYNAME:
+            bookTypeIdentifier = "Name";
+            break;
+        case BYAUTHOR:
+            bookTypeIdentifier = "Author";
+            lB = LowerCase(book->author);
+            break;
+        case BYGENRE:
+            bookTypeIdentifier = "Genre";
+            lB = LowerCase(book->genre);
+            break;  
+        default:
+            break;
+        }
+        if(strstr(lB, lName) != NULL)
+        {
+            numberOfFoundBooks++;
+            found = TRUE;
+        }
+        lB = lName;
+        free(lName);
+    }
+    if(found == FALSE)
+    {
+        printf("No Books Found of %s %s ",bookTypeIdentifier, name);
+        getchar();
+        system("clear");
+        return;
+    }
+    foundBooks = (Book*) calloc(numberOfFoundBooks, sizeof(Book));
+    for(int i = 0, k = 0; i < totalNumberOfBooks && k < numberOfFoundBooks;i++)
+    {        
+        Book *book = TotalBooks + i;
+        char *lName = LowerCase(name), *lB = LowerCase(book->name);
+        switch (type)
+        {
+        case BYNAME:
+            break;
+        case BYAUTHOR:
+            lB = LowerCase(book->author);
+            break;
+        case BYGENRE:
+            lB = LowerCase(book->genre);
+            break;  
+        default:
+            break;
+        }
+        if(strstr(lB, lName) != NULL)
+        {
+            *(foundBooks+k) = *book;
+            k++; 
+        }
+        lB = lName;
+        free(lName);
+    }
+    printf("\n");
+
+    for(int i = 0; i < numberOfFoundBooks; i++)
+    {
+        printBook(foundBooks + i);
+    }
+    //AskRemoveBook();
+    //system("clear");
+    numberOfFoundBooks = 0; // FOR FREEING THE FOUNDBOOKS
+    free(foundBooks);
+}
+void byName()
+{
+    char *in = calloc(MAXINPUTSIZE, sizeof(char));
+    printf("Enter Name : ");
+    scanf(" %[^\n]%*c", in);
+    SearchBook(in, BYNAME);
+    free(in);
+}
+void byAuthor()
+{
+    char *in = calloc(MAXINPUTSIZE, sizeof(char));
+    printf("Enter Author : ");
+    scanf(" %[^\n]%*c", in);
+    SearchBook(in, BYAUTHOR);
+    free(in);
+}
+void byGenre()
+{
+    char *in = calloc(MAXINPUTSIZE, sizeof(char));
+    printf("Enter Genre : ");
+    scanf(" %[^\n]%*c", in);
+    SearchBook(in, BYGENRE);
+    free(in);
+}
+void InputSearchBook()
+{
+    printf("Search By\n1)Name\t\t2)Author\t\t3)Genre\n");
+    int option;
+    scanf("%d", &option);
+
+    switch (option)
+    {
+    case 1:
+        byName();
+        break;
+    case 2:
+        byAuthor();
+        break;
+    case 3:
+        byGenre();
+        break;
+    default:
+        break;
+    }
+    
+}
+int main()
+{
+    LoadBooks();
     srand((unsigned int)time(NULL)); 
     printf("main\n");
-    //alt5();
-    //alt5();
+    //AskBookDetailsForAdding();
 
-    LoadBooks();
-    printBooksList();
+    InputSearchBook();
+
+    //UpdateBooks();
+
+    return 0;
+
 }
+

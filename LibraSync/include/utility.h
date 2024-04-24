@@ -44,4 +44,5 @@ void UpperCase(char *input);
 int takeCommand(char *command);
 char* LowerCase(char *in);
 char* generate_uuid_v4();
+void memallocBook(Book*);
 //char* generate_uuid_v4(char*);
