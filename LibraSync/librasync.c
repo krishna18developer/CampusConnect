@@ -4,12 +4,8 @@
 #include "include/constants.h"
 #include "include/book.h"
 #include "include/user.h"
+#include "include/librasync.h"
 #include <time.h>
-
-void mainMenu(int);
-void bookMenu();
-void userMenu();
-int takeCommand(char *);
 
 int exitClearance = FALSE;
 char *clearcommand;
@@ -100,6 +96,7 @@ void bookMenu()
         printf("\t     ADDBOOK\t\t\tAdd Book\n");
         printf("\t     REMOVEBOOK\t\t\tRemove Book\n");
         printf("\t     SEARCHBOOK\t\t\tSearch Book\n");
+        printf("\t     BORROWBOOK\t\t\tBorrow Book\n");
         printf("\t     ALLBOOK\t\t\tDisplay All Book\n");
         switch (takeCommand(command))
         {
@@ -113,6 +110,10 @@ void bookMenu()
 
             case SEARCHBOOK:
             InputSearchBook();
+            break;
+
+            case BORROWBOOK:
+            AskBorrowBook(TRUE);
             break;
 
             case ALLBOOK:
@@ -138,6 +139,7 @@ void bookMenu()
 
         if(k==1)
         {
+            mainMenu(CLEAR_SCREEN);
             break;
         }
     }
@@ -166,7 +168,7 @@ void userMenu()
             break;
 
             case REMOVEUSER:
-            AskRemoveUser(TRUE);
+            AskRemoveUser(TRUE,selectedUser);
             break;
 
             case SEARCHUSER:
@@ -200,4 +202,14 @@ void userMenu()
         }
     }
     while (1);
+}
+
+void setSelectedUser(User *in)
+{
+    selectedUser = in;
+}
+
+User* getSelectedUser()
+{
+    return selectedUser;
 }

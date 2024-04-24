@@ -5,6 +5,7 @@
 #include "include/constants.h"
 #include <time.h>
 #include "include/book.h"
+#include "include/librasync.h"
 
 Book* TotalBooks, *foundBooks;
 Index* bIndex, UIndex;
@@ -140,12 +141,20 @@ void LoadBooks()
             &((TotalBooks+i)->numberOfPeopleBorrowed)
         );
         int numberOfPeopleBorrowed = (TotalBooks+i)->numberOfPeopleBorrowed;
-        (TotalBooks+i)->borrowedPeople = (User*) calloc(numberOfPeopleBorrowed,sizeof(User));
-        for (int j = 0; j < numberOfPeopleBorrowed; j++)
+        if(numberOfPeopleBorrowed == 0)
         {
-            ((TotalBooks + i)->borrowedPeople + j )->UUID = (char*)calloc(UUIDSIZE , sizeof(char));
-            fscanf(file, "%s\n", ((TotalBooks + i)->borrowedPeople + j )->UUID);
+            (TotalBooks+i)->borrowedPeople = NULL;
         }
+        else
+        {
+            (TotalBooks + i)->borrowedPeople = (User *)calloc(numberOfPeopleBorrowed, sizeof(User));
+            for (int j = 0; j < numberOfPeopleBorrowed; j++)
+            {
+                ((TotalBooks + i)->borrowedPeople + j)->UUID = (char *)calloc(UUIDSIZE, sizeof(char));
+                fscanf(file, "%s\n", ((TotalBooks + i)->borrowedPeople + j)->UUID);
+            }
+        }
+
         fclose(file);
     }
 }
@@ -341,7 +350,7 @@ void SearchBook(char* name,int type)
     }
     int optionMenu = 1;
     printf("1)Remove Menu\t\t2)Borrow Menu\n");
-    scanf(" %d", &optionMenu);
+    scanf("%d", &optionMenu);
     switch (optionMenu)
     {
     
@@ -377,10 +386,9 @@ void AskBorrowBook(int all)
     }
     char option;
     
-    
 
-
-    printf("1)Remove Single Book\t\t2)Borrow Multiple Books\t\tPress Enter To Exit\n");
+    printf("1)Borrow Single Book\t\t2)Borrow Multiple Books\t\tPress Enter To Exit\n");
+    getchar();
     option = getchar();
 
     switch (option)
@@ -414,20 +422,43 @@ void BorrowSingleBook()
 
     Book b = *(foundBooks + option);
 
-    RemoveBook(b);
+    BorrowBook(b);
     UpdateBooks();
-    printf("Deleted Book\n");
+    printf("Borrowed Book\n");
 }
 void BorrowMultipleBook()
 {
 
 }
 
-
-
 void BorrowBook(Book bookToBorrow)
 {
+    printf("DEBUG() -> Before.\n");
 
+    if(bookToBorrow.borrowedPeople == NULL)
+    {
+        printf("NULLER\n");
+        if(getSelectedUser() == NULL)
+        {
+            printf("Select User And try again.\n");
+            return;
+        }
+        bookToBorrow.borrowedPeople = getSelectedUser();
+        bookToBorrow.numberOfPeopleBorrowed = 1;
+        return;
+    }
+    
+    User* newPeople = (User*) calloc(bookToBorrow.numberOfPeopleBorrowed + 1, sizeof(User));
+
+    for(int i = 0 ; i < totalNumberOfBooks; i++)
+    {
+        *(newPeople + i) = *(bookToBorrow.borrowedPeople + i);
+    }
+    *(newPeople + totalNumberOfBooks++) = *(getSelectedUser());
+    free(bookToBorrow.borrowedPeople);
+    free(bIndex);
+    bookToBorrow.borrowedPeople = newPeople;
+    printf("DEBUG() -> Borrowed.\n");
 }
 
 
@@ -447,6 +478,7 @@ void AskRemoveBook(int all)
     char option;
     
     printf("1)Remove Single Book\t\t2)Remove Multiple Books\n3)Remove All The Books\t\tPress Enter To Exit\n");
+    getchar();
     option = getchar();
 
     switch (option)

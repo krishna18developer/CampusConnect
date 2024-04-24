@@ -5,6 +5,7 @@
 #include "include/constants.h"
 #include <time.h>
 #include "include/user.h"
+#include "include/librasync.h"
 
 User* TotalUsers, *foundUsers;
 Index* uIndex, UIndex;
@@ -302,6 +303,7 @@ void SearchUser(char* name,int type) //41
             *(foundUsers+k) = *user;
             k++; 
         }
+
         lB = lName;
         free(lName);
     }
@@ -314,7 +316,22 @@ void SearchUser(char* name,int type) //41
     }
     //AskRemoveBook(FALSE);
     //clearScreen();
-    AskRemoveUser(FALSE);
+    int optionMenu = 1;
+    printf("1)Remove Menu\t\t2)Select User\n");
+    getchar();
+    scanf("%d", &optionMenu);
+    switch (optionMenu)
+    {
+
+    case 2:
+        setSelectedUser(SelectUser());
+        break;
+
+    default:
+    case 1:
+        AskRemoveUser(FALSE, getSelectedUser());
+        break;
+    }
     getchar();
     getchar();
     numberOfFoundUsers = 0; // FOR FREEING THE FOUNDBOOKS
@@ -323,7 +340,7 @@ void SearchUser(char* name,int type) //41
 }
 
 
-void AskRemoveUser(int all)
+void AskRemoveUser(int all, User* selected)
 {
     if(all == TRUE)
     {
@@ -337,7 +354,13 @@ void AskRemoveUser(int all)
     }
     char option;
     
-    printf("1)Remove Single User\t\t2)Remove Multiple Users\n3)Remove All The Users\t\tPress Enter To Exit\n");
+    if(selected == NULL)
+    {
+        printf("Select A User From User Menu and Then Try Again.\n");
+        return;
+    }
+
+    printf("1)Remove Single User\t\t2)Remove Multiple Users\n3)Remove All The Users\nPress Enter To Exit\n");
     getchar();
     option = getchar();
 
@@ -358,6 +381,7 @@ void AskRemoveUser(int all)
     }
 
 }
+
 
 void RemoveSingleUser()
 {
@@ -501,20 +525,17 @@ void InputSearchUser()
     }
     
 }
-/*
-int main()
-{
-    LoadUsers();
-    srand((unsigned int)time(NULL)); 
-    printf("main\n");
-    //AskUserDetailsForAdding();
 
-    InputSearchUser();
+User* SelectUser()
+{   
+    int option;
+    printf("Enter The Number of User You Would Like To Select : ");
+    scanf("%d", &option);
+    if(option < 1 || option > numberOfFoundUsers)
+    {
+        printf("Invalid Option Given.\nTry Again.\n");
+        return NULL;
+    }
 
-    //UpdateUsers();
-
-    return 0;
-
+    return (foundUsers + --option);
 }
-
-*/

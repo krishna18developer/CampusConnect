@@ -44,3 +44,5 @@
 #define ALLUSER 23
 
 #define BYPRIVILEGELEVEL 24
+
+#define BORROWBOOK 25
