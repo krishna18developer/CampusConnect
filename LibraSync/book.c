@@ -459,7 +459,6 @@ void BorrowSingleBook()
     printBook((foundBooks + option));
     BorrowBook(*(foundBooks + option));
     UpdateBooks();
-    printBooksList();
 
 }
 void BorrowMultipleBook()
@@ -480,15 +479,15 @@ void BorrowBook(Book bookToBorrow)
         if(CompareBooks(*(TotalBooks + i), bookToBorrow))
         {
             
-            if((TotalBooks + i)->borrowedPeople == NULL)
+            if(bookToBorrow.borrowedPeople == NULL)
             {
-                (TotalBooks + i)->borrowedPeople = (User*) malloc(sizeof(User));
-                (TotalBooks + i)->borrowedPeople = getSelectedUser();
-                (TotalBooks + i)->numberOfPeopleBorrowed = 1;
+                bookToBorrow.borrowedPeople = (User*) malloc(sizeof(User));
+                bookToBorrow.borrowedPeople = getSelectedUser();
+                bookToBorrow.numberOfPeopleBorrowed = 1;
             }
             else
             {
-                int n = (TotalBooks + i)->numberOfPeopleBorrowed;
+                int n = bookToBorrow.numberOfPeopleBorrowed;
                 User* newSetOfUsers = (User*) calloc((n+1), sizeof(User));
                 if(newSetOfUsers == NULL)
                 {
@@ -496,25 +495,26 @@ void BorrowBook(Book bookToBorrow)
                 }
                 for(int j = 0; j < n; j++)
                 {
-                    printf("%d\n", j);
-                    printf("num : %d\n", n);
-                    printUser((TotalBooks + i)->borrowedPeople + j);
-                    *newSetOfUsers = *((TotalBooks + i)->borrowedPeople + j);
+                    *(newSetOfUsers + j) = *(bookToBorrow.borrowedPeople + j);
                 }
                 *(newSetOfUsers + n) = *getSelectedUser();
                 //printUser((TotalBooks + i)->borrowedPeople + n);
-                free((TotalBooks + i)->borrowedPeople);
-                (TotalBooks + i)->borrowedPeople = newSetOfUsers;
-                printf("numberOfPeopleBorrowed : %d\n", (TotalBooks + i)->numberOfPeopleBorrowed);
-                (TotalBooks + i)->numberOfPeopleBorrowed++;
-                printf("After + numberOfPeopleBorrowed : %d\n", (TotalBooks + i)->numberOfPeopleBorrowed);
+                free(bookToBorrow.borrowedPeople);
+                bookToBorrow.borrowedPeople = newSetOfUsers;
+                printf("numberOfPeopleBorrowed : %d\n", bookToBorrow.numberOfPeopleBorrowed);
+                bookToBorrow.numberOfPeopleBorrowed++;
+                printf("After + numberOfPeopleBorrowed : %d\n", bookToBorrow.numberOfPeopleBorrowed);
             }
+            *(TotalBooks + i) = bookToBorrow;
 
         }
         *(newSet + i) = *(TotalBooks + i);
     }
     free(TotalBooks);
-    TotalBooks = newSet; 
+    TotalBooks = newSet;
+
+    printf("DEBUG()-> Modified Book\n");
+    printBook(&bookToBorrow); 
 }
 
 void OBorrowBook(Book *bookToBorrow)

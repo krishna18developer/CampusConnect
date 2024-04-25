@@ -259,5 +259,5 @@ User* getSelectedUser()
 void test(User* t)
 {
     printf("DEBUG() -> test()");
-    printUsersList(t);
+    //printUsersList(t);
 }
