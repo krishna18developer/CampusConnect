@@ -79,8 +79,10 @@ void UpdateBooks()
         fprintf(file, "%d\n", (TotalBooks+i)->numberOfPeopleBorrowed);
         for(int j = 0; j < (TotalBooks+i)->numberOfPeopleBorrowed; j++)
         {
-            
-           fprintf(file, "%s\n", ((TotalBooks + i)->borrowedPeople + j)->UUID);
+            if(((TotalBooks + i)->borrowedPeople + j)->UUID == NULL)
+            continue;
+
+            fprintf(file, "%s\n", ((TotalBooks + i)->borrowedPeople + j)->UUID);
         }
         fclose(file);
     }
@@ -375,7 +377,8 @@ void SearchBook(char* name,int type)
         break;
 
     case 3:
-    AskReturnBook(FALSE);
+    //AskReturnBook(FALSE);
+    printf("Return Menu Still in Progress!\n");
     break;
 
     default:
@@ -746,29 +749,22 @@ int ReturnBook(Book bookToReturn)
     {
         if(CompareBooks(*(TotalBooks + i), bookToReturn))
         {
-            int temp = 0;
             User* newSetOfUsers = (User*) calloc(bookToReturn.numberOfPeopleBorrowed - 1, sizeof(User));
-            for(int j = 0, k = 0; j < bookToReturn.numberOfPeopleBorrowed; j++)
+            for(int j = 0, k = 0; j < bookToReturn.numberOfPeopleBorrowed + 1; j++)
             {
                 if(CompareUsers(*((TotalBooks + i)->borrowedPeople + j), *(bookToReturn.borrowedPeople + j)) == FALSE)
                 {
                     *(newSetOfUsers + k) = *(bookToReturn.borrowedPeople + j);
                     k++;
                 }
-                else
-                {
-                    temp++;
-                }
             }
             free((TotalBooks + i)->borrowedPeople);
             (TotalBooks + i)->borrowedPeople = newSetOfUsers;
 
-            for(int i = 0 ; i < temp; i++)
-            {
-                bookToReturn.numberOfPeopleBorrowed--;
-                bookToReturn.numberOfCopies++;
-            }
+            bookToReturn.numberOfPeopleBorrowed--;
+            bookToReturn.numberOfCopies++;
 
+            *(TotalBooks + i) = bookToReturn;
         }
         *(newSet + i) = *(TotalBooks + i);
     }
