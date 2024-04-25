@@ -391,7 +391,9 @@ void AskBorrowBook(int all)
     {
         LoadBooks();
 
+        if(foundBooks != NULL)
         free(foundBooks);
+
         foundBooks = TotalBooks;
         numberOfFoundBooks = totalNumberOfBooks;
         printBooksList();
@@ -405,8 +407,15 @@ void AskBorrowBook(int all)
     }
 
     printf("1)Borrow Single Book\t\t2)Borrow Multiple Books\t\tPress Enter To Exit\n");
-    getchar();
-    option = getchar();
+    if(getchar()=='\n')
+    {
+        option = getchar();
+    }
+    else
+    {
+        option = getchar();
+    }
+    
 
     switch (option)
     {
@@ -731,17 +740,3 @@ int main()
 }
 
 */
-void testF()
-{
-    if(TotalBooks == NULL)
-    {
-        printf("DEBUG() -> testF() -> TotalBooks NULL");
-        return;
-    }
-    printf("DEBUG() -> testF() -> TotalBooks->UUID : %s\n", TotalBooks->UUID);
-    printf("DEBUG() -> testF() -> TotalBooks->numberOfPeopleBorrowed : %d\n", TotalBooks->numberOfPeopleBorrowed);
-    printf("DEBUG() -> testF() -> Incrementing\n");
-    TotalBooks->numberOfPeopleBorrowed++;
-    printf("DEBUG() -> testF() -> TotalBooks->numberOfPeopleBorrowed : %d\n", TotalBooks->numberOfPeopleBorrowed);
-    UpdateBooks();
-}

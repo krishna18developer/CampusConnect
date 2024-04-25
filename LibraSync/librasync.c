@@ -46,7 +46,6 @@ int main()
             break;
 
             default:
-            printUser(getSelectedUser());
             printf("Unknown Command\n");
             break;
         }
@@ -116,25 +115,21 @@ void bookMenu()
     int k = 0;
     char command [COMMAND_MAX_SIZE];
     clearScreen();
-    greetingBook();
+    
     do
     {
+        greetingBook();
         printf("\n\n");
         printf("\t     CODE\t\t\tFUNCTION\n");
         printf("\t     MAINMENU\t\t\tMain Menu\n");
         printf("\t     ADDBOOK\t\t\tAdd Book\n");
         printf("\t     REMOVEBOOK\t\t\tRemove Book\n");
         printf("\t     SEARCHBOOK\t\t\tSearch Book\n");
-        printf("\t     BORROWBOOK\t\t\tBorrow Book\n");
         printf("\t     ALLBOOK\t\t\tDisplay All Book\n");
         switch (takeCommand(command))
         {
             case EXIT:
             exitClearance = TRUE;
-            break;
-            
-            case TEST:
-            testF();
             break;
 
             case ADDBOOK:
@@ -147,10 +142,6 @@ void bookMenu()
 
             case SEARCHBOOK:
             InputSearchBook();
-            break;
-
-            case BORROWBOOK:
-            AskBorrowBook(TRUE);
             break;
 
             case ALLBOOK:
@@ -188,10 +179,10 @@ void userMenu()
     //LoadBooks();
     int k = 0;
     char command [COMMAND_MAX_SIZE];
-    clearScreen();
-    greetingUser();
+    clearScreen();  
     do
     {
+        greetingUser();
         printf("\n\n");
         printf("\t     CODE\t\t\tFUNCTION\n");
         printf("\t     MAINMENU\t\t\tMain Menu\n");
@@ -254,10 +245,4 @@ void setSelectedUser(User *in)
 User* getSelectedUser()
 {
     return &selectedUser;
-}
-
-void test(User* t)
-{
-    printf("DEBUG() -> test()");
-    //printUsersList(t);
 }

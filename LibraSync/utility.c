@@ -151,6 +151,10 @@ int ParseCommand(char *command)
     {
         k = SEARCHBOOK;
     }
+     else if(strcmp(command, "BORROWBOOK") == 0 || strcmp(command, "BOOKBORROW") == 0 || strcmp(command, "RENTBOOK") == 0 )
+    {
+        k = BORROWBOOK;
+    }
      else if(strcmp(command, "ALLBOOK") == 0 || strcmp(command, "BOOKALL") == 0 || strcmp(command, "AB") == 0 )
     {
         k = ALLBOOK;

@@ -24,5 +24,3 @@ void AskBorrowBook(int);
 void BorrowSingleBook();
 void BorrowMultipleBook();
 
-
-void testF();
