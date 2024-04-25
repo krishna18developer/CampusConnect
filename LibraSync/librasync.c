@@ -10,7 +10,7 @@
 int exitClearance = FALSE;
 char *clearcommand;
 
-User *selectedUser = NULL;
+User selectedUser;
 
 int main()
 {
@@ -46,6 +46,7 @@ int main()
             break;
 
             default:
+            printUser(getSelectedUser());
             printf("Unknown Command\n");
             break;
         }
@@ -69,7 +70,34 @@ void greeting()
     printf("\t     ****************************************\n");
     printf("\n\n");
 }
-
+void greetingBook()
+{
+    printf("\n\n");
+    printf("\t     ****************************************\n");
+    printf("\t     *                                      *\n");
+    printf("\t     *                                      *\n");
+    printf("\t     *     ----------------------------     *\n");
+    printf("\t     *            BOOKS SECTION             *\n");
+    printf("\t     *     ----------------------------     *\n");
+    printf("\t     *                                      *\n");
+    printf("\t     *                                      *\n");
+    printf("\t     ****************************************\n");
+    printf("\n\n");
+}
+void greetingUser()
+{
+    printf("\n\n");
+    printf("\t     ****************************************\n");
+    printf("\t     *                                      *\n");
+    printf("\t     *                                      *\n");
+    printf("\t     *     ----------------------------     *\n");
+    printf("\t     *            USERS SECTION             *\n");
+    printf("\t     *     ----------------------------     *\n");
+    printf("\t     *                                      *\n");
+    printf("\t     *                                      *\n");
+    printf("\t     ****************************************\n");
+    printf("\n\n");
+}
 void mainMenu(int clear)
 {
     if(clear == CLEAR_SCREEN)
@@ -88,6 +116,7 @@ void bookMenu()
     int k = 0;
     char command [COMMAND_MAX_SIZE];
     clearScreen();
+    greetingBook();
     do
     {
         printf("\n\n");
@@ -100,6 +129,14 @@ void bookMenu()
         printf("\t     ALLBOOK\t\t\tDisplay All Book\n");
         switch (takeCommand(command))
         {
+            case EXIT:
+            exitClearance = TRUE;
+            break;
+            
+            case TEST:
+            testF();
+            break;
+
             case ADDBOOK:
             AskBookDetailsForAdding();
             break;
@@ -143,7 +180,7 @@ void bookMenu()
             break;
         }
     }
-    while (1);
+    while (exitClearance == FALSE);
 }
 
 void userMenu()
@@ -152,6 +189,7 @@ void userMenu()
     int k = 0;
     char command [COMMAND_MAX_SIZE];
     clearScreen();
+    greetingUser();
     do
     {
         printf("\n\n");
@@ -163,12 +201,16 @@ void userMenu()
         printf("\t     ALLUSER\t\t\tDisplay All Users\n");
         switch (takeCommand(command))
         {
+            case EXIT:
+            exitClearance = TRUE;
+            break;
+        
             case ADDUSER:
             AskUserDetailsForAdding();
             break;
 
             case REMOVEUSER:
-            AskRemoveUser(TRUE,selectedUser);
+            AskRemoveUser(TRUE,&selectedUser);
             break;
 
             case SEARCHUSER:
@@ -195,21 +237,27 @@ void userMenu()
             printf("Unknown Command\n");
             break;
         }
-
         if(k==1)
         {
+            mainMenu(CLEAR_SCREEN);
             break;
         }
     }
-    while (1);
+    while (exitClearance == FALSE);
 }
 
 void setSelectedUser(User *in)
 {
-    selectedUser = in;
+    selectedUser = *in;
 }
 
 User* getSelectedUser()
 {
-    return selectedUser;
+    return &selectedUser;
+}
+
+void test(User* t)
+{
+    printf("DEBUG() -> test()");
+    printUsersList(t);
 }

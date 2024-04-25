@@ -5,6 +5,7 @@
 #include "include/constants.h"
 #include <time.h>
 #include "include/book.h"
+#include "include/user.h"
 #include "include/librasync.h"
 
 Book* TotalBooks, *foundBooks;
@@ -48,6 +49,7 @@ void AddBook(Book bookToBeAdded)
 
 void UpdateBooks()
 {
+    printf("DEBUG() -> UpdateBooks()\n");
     if(TotalBooks == NULL)
     {
         printf("Unable To Update The Books.\nPlease Try Again.");
@@ -55,8 +57,10 @@ void UpdateBooks()
     }
     FILE* IFile;
     IFile = fopen("data/BIndex.txt","w");
+    printf("DEBUG() -> UpdateBooks() -> totalNumberOfBooks %d\n", totalNumberOfBooks);
     for(int i = 0; i < totalNumberOfBooks; i++) // 0 < 2
     {
+        printf("DEBUG() -> UpdateBooks() -> LOOP %d\n", i);
         FILE* file;
         char fileName[UUIDSIZE+11];
         sprintf(fileName, "data/B-%s.txt", (TotalBooks + i)->UUID);
@@ -78,7 +82,16 @@ void UpdateBooks()
         fprintf(file, "%d\n", (TotalBooks+i)->numberOfPeopleBorrowed);
         for(int j = 0; j < (TotalBooks+i)->numberOfPeopleBorrowed; j++)
         {
-            fprintf(file, "%s\n", ((TotalBooks+i)->borrowedPeople + j)->UUID);
+            if((TotalBooks + i)->borrowedPeople == NULL)
+            {
+                continue;
+            }
+            User* u = (TotalBooks + i)->borrowedPeople;
+            if((u + j)->UUID == NULL)
+            {
+                printf("DEBUG()-> NULL");
+            }
+            fprintf(file, "%s\n", (u + j)->UUID);
         }
         fclose(file);
     }
@@ -87,12 +100,12 @@ void UpdateBooks()
 void LoadBooks()
 {
     totalNumberOfBooks = 0;
-    if(TotalBooks!=NULL)
+    if (TotalBooks != NULL)
     {
         free(TotalBooks);
     }
     FILE *fp = fopen("data/BIndex.txt", "r");
-    if(fp == NULL)
+    if (fp == NULL)
     {
         printf("Unable To Retrieve Books Index.\nPlease Try Again\n");
         return;
@@ -100,50 +113,50 @@ void LoadBooks()
     char c;
     for (c = getc(fp); c != EOF; c = getc(fp))
         if (c == '\n')
-        totalNumberOfBooks += 1;
+            totalNumberOfBooks += 1;
 
     ////printf("DEBUG() -> totalNumberOFBooks : %d\n", totalNumberOfBooks);
     rewind(fp);
-    if(totalNumberOfBooks <= 0)
+    if (totalNumberOfBooks <= 0)
     {
         return;
     }
-    bIndex = (Index*) calloc(totalNumberOfBooks, sizeof(Index));
-    TotalBooks = (Book*) calloc(totalNumberOfBooks, sizeof(Book));
+    bIndex = (Index *)calloc(totalNumberOfBooks, sizeof(Index));
+    TotalBooks = (Book *)calloc(totalNumberOfBooks, sizeof(Book));
 
-    for(int i = 0; i < totalNumberOfBooks; i++)
+    for (int i = 0; i < totalNumberOfBooks; i++)
     {
-        (bIndex+i)->data = (char*) calloc(UUIDSIZE, sizeof(char));
-        fscanf(fp , "%s\n", (bIndex+i)->data);
-        char fileName[UUIDSIZE+11];
-        sprintf(fileName, "data/B-%s.txt", (bIndex+i)->data);
+        (bIndex + i)->data = (char *)calloc(UUIDSIZE, sizeof(char));
+        fscanf(fp, "%s\n", (bIndex + i)->data);
+        char fileName[UUIDSIZE + 11];
+        sprintf(fileName, "data/B-%s.txt", (bIndex + i)->data);
         ////printf("DEBUG() -> fileName: %s\n", fileName);
-        FILE* file = fopen(fileName, "r");
-        if(file == NULL)
+        FILE *file = fopen(fileName, "r");
+        if (file == NULL)
         {
             printf("Unable To Open Book File.\nPlease Try Again\n");
-            return;            
+            return;
         }
-        (TotalBooks+i)->UUID = (char*) calloc(UUIDSIZE, sizeof(char));
-        (TotalBooks+i)->name = (char*) calloc(MAXINPUTSIZE, sizeof(char));
-        (TotalBooks+i)->author = (char*) calloc(MAXINPUTSIZE, sizeof(char));
-        (TotalBooks+i)->genre = (char*) calloc(MAXINPUTSIZE, sizeof(char));
+        (TotalBooks + i)->UUID = (char *)calloc(UUIDSIZE, sizeof(char));
+        (TotalBooks + i)->name = (char *)calloc(MAXINPUTSIZE, sizeof(char));
+        (TotalBooks + i)->author = (char *)calloc(MAXINPUTSIZE, sizeof(char));
+        (TotalBooks + i)->genre = (char *)calloc(MAXINPUTSIZE, sizeof(char));
         char *format1 = "%[^\n]\n%[^\n]\n%[^\n]\n%[^\n]\n%f\n%d\n%d\n%d\n";
         char *format2 = "%s\n%s\n%s\n%s\n%f\n%d\n%d\n%d\n";
-        fscanf(file, format1, 
-            (TotalBooks+i)->UUID,
-            (TotalBooks+i)->name,
-            (TotalBooks+i)->author,
-            (TotalBooks+i)->genre,
-            &(TotalBooks+i)->price,
-            &(TotalBooks+i)->publishedYear,
-            &((TotalBooks+i)->numberOfCopies),
-            &((TotalBooks+i)->numberOfPeopleBorrowed)
-        );
-        int numberOfPeopleBorrowed = (TotalBooks+i)->numberOfPeopleBorrowed;
-        if(numberOfPeopleBorrowed == 0)
+        fscanf(file, format1,
+               (TotalBooks + i)->UUID,
+               (TotalBooks + i)->name,
+               (TotalBooks + i)->author,
+               (TotalBooks + i)->genre,
+               &(TotalBooks + i)->price,
+               &(TotalBooks + i)->publishedYear,
+               &((TotalBooks + i)->numberOfCopies),
+               &((TotalBooks + i)->numberOfPeopleBorrowed));
+        int numberOfPeopleBorrowed = (TotalBooks + i)->numberOfPeopleBorrowed;
+        printf("DEBUG() -> numberOfPeopleBorrowed : %d\n", numberOfPeopleBorrowed);
+        if (numberOfPeopleBorrowed == 0)
         {
-            (TotalBooks+i)->borrowedPeople = NULL;
+            (TotalBooks + i)->borrowedPeople = NULL;
         }
         else
         {
@@ -153,12 +166,33 @@ void LoadBooks()
                 ((TotalBooks + i)->borrowedPeople + j)->UUID = (char *)calloc(UUIDSIZE, sizeof(char));
                 fscanf(file, "%s\n", ((TotalBooks + i)->borrowedPeople + j)->UUID);
             }
-        }
+            for (int j = 0; j < numberOfPeopleBorrowed; j++)
+            {
+                char fileName[UUIDSIZE + 11];
+                sprintf(fileName, "data/U-%s.txt", ((TotalBooks + i)->borrowedPeople + j)->UUID);
+                ////printf("DEBUG() -> fileName: %s\n", fileName);
+                FILE *file2 = fopen(fileName, "r");
+                if (file2 == NULL)
+                {
+                    printf("Unable To Open User File.\nPlease Try Again\n");
+                    return;
+                }
+                ((TotalBooks + i)->borrowedPeople + j)->privilege = (char *)calloc(MAXINPUTSIZE, sizeof(char));
+                ((TotalBooks + i)->borrowedPeople + j)->name = (char *)calloc(MAXINPUTSIZE, sizeof(char));
+                ((TotalBooks + i)->borrowedPeople + j)->password = (char *)calloc(MAXINPUTSIZE, sizeof(char));
 
-        fclose(file);
+                char *format1 = "%[^\n]\n%[^\n]\n%[^\n]\n%[^\n]\n%d\n";
+                fscanf(file2, format1,
+                       ((TotalBooks + i)->borrowedPeople + j)->UUID,
+                       ((TotalBooks + i)->borrowedPeople + j)->privilege,
+                       ((TotalBooks + i)->borrowedPeople + j)->name,
+                       ((TotalBooks + i)->borrowedPeople + j)->password,
+                       &((TotalBooks + i)->borrowedPeople + j)->rollnumber);
+                fclose(file2);
+            }
+        }
     }
 }
-
 
 void printBook(Book *book)
 {
@@ -385,7 +419,13 @@ void AskBorrowBook(int all)
         getchar();
     }
     char option;
-    
+
+    printf("DEBUG() -> getSelectedUser().\n");
+    if(getSelectedUser() == NULL)
+    {
+        printf("Select a User And try Again.\n");
+        return;
+    }
 
     printf("1)Borrow Single Book\t\t2)Borrow Multiple Books\t\tPress Enter To Exit\n");
     getchar();
@@ -420,44 +460,80 @@ void BorrowSingleBook()
     }
     option--;
 
-    BorrowBook(foundBooks + option);
+    printBook((foundBooks + option));
+    BorrowBook(*(foundBooks + option));
+    printf("DEBUG() -> BorrowSingleBook() -> numberOfPeopleBorrowed : %d\n",(foundBooks + option)->numberOfPeopleBorrowed);
+    printf("DEBUG() -> BorrowSingleBook() -> UUID : %s\n",(foundBooks + option)->borrowedPeople->UUID);
+    printf("DEBUG() -> BorrowSingleBook() -> UUID : %s\n",((foundBooks + option)->borrowedPeople+1)->UUID);
     UpdateBooks();
 }
 void BorrowMultipleBook()
 {
 
 }
+void BorrowBook(Book bookToBorrow)
+{
+    if(TotalBooks == NULL)
+    {
+        printf("Unable To Borrow The Book.\n");
+        return;
+    }
+    int check = 0;
+    Book* newSet = (Book*) calloc(totalNumberOfBooks, sizeof(Book));
+    for(int i = 0 ; i < totalNumberOfBooks; i++)
+    {
+        if(CompareBooks(*(TotalBooks + i), bookToBorrow))
+        {
+            
+            if((TotalBooks + i)->borrowedPeople == NULL)
+            {
+                printf("NULL\n");
+                (TotalBooks + i)->borrowedPeople = (User*) malloc(sizeof(User));
+                (TotalBooks + i)->borrowedPeople = getSelectedUser();
+                (TotalBooks + i)->numberOfPeopleBorrowed = 1;
+            }
+            else
+            {
+                printf("NOT NULL\n");
+                User* newSetOfUsers = (User*) calloc((TotalBooks + i)->numberOfPeopleBorrowed, sizeof(User));
+                if(newSetOfUsers == NULL)
+                {
+                    printf("Unknown Error Occured.\n");
+                }
+                printf("ALLOC\n");
+                for(int j = 0; j < (TotalBooks + i)->numberOfPeopleBorrowed; j++)
+                {
+                    printf("%d\n", j);
+                    printUser((TotalBooks + i)->borrowedPeople);
+                    *newSetOfUsers = *((TotalBooks + i)->borrowedPeople);
+                }
+                *(newSetOfUsers + (TotalBooks + i)->numberOfPeopleBorrowed) = *getSelectedUser();
+                (TotalBooks + i)->numberOfPeopleBorrowed++;
+            }
 
-void BorrowBook(Book *bookToBorrow)
+        }
+        *(newSet + i) = *(TotalBooks + i);
+    }
+    free(TotalBooks);
+    TotalBooks = newSet; 
+}
+
+void OBorrowBook(Book *bookToBorrow)
 {
     printf("DEBUG() -> Before.\n");
+    printf("DEBUG() -> BorrowBook() -> numberOfPeopleBorrowed : %d\n",bookToBorrow->numberOfPeopleBorrowed);
 
     if(bookToBorrow->borrowedPeople == NULL)
     {
-        printf("NULLER\n");
-        if(getSelectedUser() == NULL)
-        {
-            printf("Select User And try again.\n");
-            return;
-        }
+        printf("DEBUG() -> NULL\n");
         bookToBorrow->borrowedPeople = getSelectedUser();
-
-        printBook(&bookToBorrow);
         bookToBorrow->numberOfPeopleBorrowed = 1;
+        printf("DEBUG() -> NULL\n");
         return;
     }
+    bookToBorrow->numberOfPeopleBorrowed++;
     
-    User* newPeople = (User*) calloc(bookToBorrow->numberOfPeopleBorrowed + 1, sizeof(User));
-
-    for(int i = 0 ; i < totalNumberOfBooks; i++)
-    {
-        *(newPeople + i) = *(bookToBorrow->borrowedPeople + i);
-    }
-    *(newPeople + totalNumberOfBooks++) = *(getSelectedUser());
-    free(bookToBorrow->borrowedPeople);
-    free(bIndex);
-    bookToBorrow->borrowedPeople = newPeople;
-    printf("DEBUG() -> Borrowed.\n");
+    printf("DEBUG() -> After.\n");
 }
 
 
@@ -645,3 +721,17 @@ int main()
 }
 
 */
+void testF()
+{
+    if(TotalBooks == NULL)
+    {
+        printf("DEBUG() -> testF() -> TotalBooks NULL");
+        return;
+    }
+    printf("DEBUG() -> testF() -> TotalBooks->UUID : %s\n", TotalBooks->UUID);
+    printf("DEBUG() -> testF() -> TotalBooks->numberOfPeopleBorrowed : %d\n", TotalBooks->numberOfPeopleBorrowed);
+    printf("DEBUG() -> testF() -> Incrementing\n");
+    TotalBooks->numberOfPeopleBorrowed++;
+    printf("DEBUG() -> testF() -> TotalBooks->numberOfPeopleBorrowed : %d\n", TotalBooks->numberOfPeopleBorrowed);
+    UpdateBooks();
+}

@@ -135,7 +135,7 @@ int ParseCommand(char *command)
     {
         k = CLEAR;
     }
-    else if(strcmp(command, "MAIN") == 0 || strcmp(command, "MAINMENU") == 0 || strcmp(command, "MENU") == 0)
+    else if(strcmp(command, "MAIN") == 0 || strcmp(command, "MAINMENU") == 0 || strcmp(command, "MENU") == 0 || strcmp(command, "BACK") == 0)
     {
         k = MAINMENU;
     }
@@ -171,6 +171,11 @@ int ParseCommand(char *command)
     {
         k = ALLUSER;
     }
+     else if(strcmp(command, "TEST") == 0)
+    {
+        k = TEST;
+    }
+    
     return k;
 }
 

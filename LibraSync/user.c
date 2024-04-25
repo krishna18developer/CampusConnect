@@ -236,7 +236,7 @@ void AskUserDetailsForAdding()
 }
 
 
-void SearchUser(char* name,int type) //41
+void SearchUser(char* name,int type)
 {
     LoadUsers();
     int found = FALSE;
@@ -322,14 +322,16 @@ void SearchUser(char* name,int type) //41
     scanf("%d", &optionMenu);
     switch (optionMenu)
     {
+    case 1:
+        AskRemoveUser(FALSE, getSelectedUser());
+        break;
 
     case 2:
         setSelectedUser(SelectUser());
         break;
 
+    case RETURNCHARACTER:
     default:
-    case 1:
-        AskRemoveUser(FALSE, getSelectedUser());
         break;
     }
     getchar();
@@ -361,9 +363,7 @@ void AskRemoveUser(int all, User* selected)
     }
 
     printf("1)Remove Single User\t\t2)Remove Multiple Users\n3)Remove All The Users\nPress Enter To Exit\n");
-    getchar();
     option = getchar();
-
     switch (option)
     {
         case '1':

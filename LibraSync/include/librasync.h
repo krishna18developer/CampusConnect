@@ -8,3 +8,4 @@ int takeCommand(char *);
 void greeting();
 void setSelectedUser(User*);
 User* getSelectedUser();
+void test(User* t);
