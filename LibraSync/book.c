@@ -489,7 +489,7 @@ void BorrowBook(Book bookToBorrow)
             else
             {
                 int n = (TotalBooks + i)->numberOfPeopleBorrowed;
-                User* newSetOfUsers = (User*) calloc(n + 1, sizeof(User));
+                User* newSetOfUsers = (User*) calloc((n+1), sizeof(User));
                 if(newSetOfUsers == NULL)
                 {
                     printf("Unknown Error Occured.\n");
@@ -498,15 +498,16 @@ void BorrowBook(Book bookToBorrow)
                 {
                     printf("%d\n", j);
                     printf("num : %d\n", n);
-                    printUser((TotalBooks + i)->borrowedPeople);
-                    *newSetOfUsers = *((TotalBooks + i)->borrowedPeople);
+                    printUser((TotalBooks + i)->borrowedPeople + j);
+                    *newSetOfUsers = *((TotalBooks + i)->borrowedPeople + j);
                 }
-                printUser(getSelectedUser());
                 *(newSetOfUsers + n) = *getSelectedUser();
-                printUser((newSetOfUsers + n));
+                //printUser((TotalBooks + i)->borrowedPeople + n);
                 free((TotalBooks + i)->borrowedPeople);
                 (TotalBooks + i)->borrowedPeople = newSetOfUsers;
+                printf("numberOfPeopleBorrowed : %d\n", (TotalBooks + i)->numberOfPeopleBorrowed);
                 (TotalBooks + i)->numberOfPeopleBorrowed++;
+                printf("After + numberOfPeopleBorrowed : %d\n", (TotalBooks + i)->numberOfPeopleBorrowed);
             }
 
         }

@@ -163,7 +163,7 @@ int ParseCommand(char *command)
     {
         k = REMOVEUSER;
     }
-     else if(strcmp(command, "SEARCHUSER") == 0 || strcmp(command, "USERSEARCH") == 0)
+     else if(strcmp(command, "SEARCHUSER") == 0 || strcmp(command, "USERSEARCH") == 0 || strcmp(command, "SU") == 0)
     {
         k = SEARCHUSER;
     }
