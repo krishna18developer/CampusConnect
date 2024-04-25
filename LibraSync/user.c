@@ -241,7 +241,7 @@ void SearchUser(char* name,int type)
     LoadUsers();
     int found = FALSE;
     numberOfFoundUsers = 0;
-    char *bookTypeIdentifier = "Roll Number";
+    char *userTypeIdentifier = "Roll Number";
     
     for(int i = 0; i < totalNumberOfUsers;i++)
     {
@@ -251,13 +251,13 @@ void SearchUser(char* name,int type)
         switch (type)
         {
         case BYNAME:
-            bookTypeIdentifier = "Name";
+            userTypeIdentifier = "Name";
             break;
         case BYROLLNUMBER:
             sprintf(lB, "%d", user->rollnumber);
             break;
         case BYPRIVILEGELEVEL:
-            bookTypeIdentifier = "Privilege";
+            userTypeIdentifier = "Privilege";
             lB = LowerCase(user->privilege);
             break;
         default:
@@ -273,7 +273,7 @@ void SearchUser(char* name,int type)
     }
     if(found == FALSE)
     {
-        printf("No Books Found of %s %s ",bookTypeIdentifier, name);
+        printf("No Users Found of %s %s ",userTypeIdentifier, name);
         getchar();
         getchar();
         clearScreen();
@@ -292,7 +292,7 @@ void SearchUser(char* name,int type)
             sprintf(lB, "%d", user->rollnumber);
             break;
         case BYPRIVILEGELEVEL:
-            bookTypeIdentifier = "Privilege";
+            userTypeIdentifier = "Privilege";
             lB = LowerCase(user->privilege);
             break;
         default:
@@ -314,7 +314,7 @@ void SearchUser(char* name,int type)
         printf("%d)", i + 1);
         printUser(foundUsers + i);
     }
-    //AskRemoveBook(FALSE);
+    //AskRemoveuser(FALSE);
     //clearScreen();
     int optionMenu = 1;
     printf("1)Remove Menu\t\t2)Select User\n");
@@ -336,7 +336,7 @@ void SearchUser(char* name,int type)
     }
     getchar();
     getchar();
-    numberOfFoundUsers = 0; // FOR FREEING THE FOUNDBOOKS
+    numberOfFoundUsers = 0;
     free(foundUsers);
     clearScreen();
 }

@@ -24,3 +24,7 @@ void AskBorrowBook(int);
 void BorrowSingleBook();
 void BorrowMultipleBook();
 
+int ReturnBook(Book);
+void AskReturnBook(int all);
+void ReturnSingleBook();
+void ReturnMultipleBook();

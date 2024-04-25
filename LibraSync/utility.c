@@ -155,6 +155,10 @@ int ParseCommand(char *command)
     {
         k = BORROWBOOK;
     }
+       else if(strcmp(command, "RETURNBOOK") == 0 || strcmp(command, "BOOKRETURN") == 0 || strcmp(command, "RETURN") == 0 )
+    {
+        k = RETURNBOOK;
+    }
      else if(strcmp(command, "ALLBOOK") == 0 || strcmp(command, "BOOKALL") == 0 || strcmp(command, "AB") == 0 )
     {
         k = ALLBOOK;
@@ -170,6 +174,10 @@ int ParseCommand(char *command)
      else if(strcmp(command, "SEARCHUSER") == 0 || strcmp(command, "USERSEARCH") == 0 || strcmp(command, "SU") == 0)
     {
         k = SEARCHUSER;
+    }
+     else if(strcmp(command, "SHOWSELECTEDUSER") == 0 || strcmp(command, "SSU") == 0 || strcmp(command, "SUSER") == 0)
+    {
+        k = SHOWSELECTEDUSER;
     }
      else if(strcmp(command, "ALLUSER") == 0 || strcmp(command, "USERALL") == 0)
     {

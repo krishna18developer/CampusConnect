@@ -79,6 +79,7 @@ void UpdateBooks()
         fprintf(file, "%d\n", (TotalBooks+i)->numberOfPeopleBorrowed);
         for(int j = 0; j < (TotalBooks+i)->numberOfPeopleBorrowed; j++)
         {
+            
            fprintf(file, "%s\n", ((TotalBooks + i)->borrowedPeople + j)->UUID);
         }
         fclose(file);
@@ -362,21 +363,23 @@ void SearchBook(char* name,int type)
         printBook(foundBooks + i);
     }
     int optionMenu = 1;
-    printf("1)Remove Menu\t\t2)Borrow Menu\n");
+    printf("1)Remove Menu\t\t2)Borrow Menu\t\t3)Return Menu\n");
     scanf("%d", &optionMenu);
     switch (optionMenu)
     {
-    
+    case 1:
+        AskRemoveBook(FALSE);
+        break;
     case 2:
         AskBorrowBook(FALSE);
         break;
-    
-    
-    default:
-        case 1:
-            AskRemoveBook(FALSE);
-            break;
 
+    case 3:
+    AskReturnBook(FALSE);
+    break;
+
+    default:
+        break;
     }
     //AskRemoveBook(FALSE);
     //clearScreen();
@@ -723,20 +726,164 @@ void InputSearchBook()
     }
     
 }
-/*
-int main()
+
+
+int ReturnBook(Book bookToReturn)
 {
-    LoadBooks();
-    srand((unsigned int)time(NULL)); 
-    printf("main\n");
-    //AskBookDetailsForAdding();
+    if(TotalBooks == NULL)
+    {
+        printf("Unable To Return The Book.\n");
+        return FALSE;
+    }
+    if(getSelectedUser()->UUID == NULL)
+    {
+        printf("Please select user and try again.\n");
+        return FALSE;
+    }
+    int check = 0;
+    Book* newSet = (Book*) calloc(totalNumberOfBooks, sizeof(Book));
+    for(int i = 0 ; i < totalNumberOfBooks; i++)
+    {
+        if(CompareBooks(*(TotalBooks + i), bookToReturn))
+        {
+            int temp = 0;
+            User* newSetOfUsers = (User*) calloc(bookToReturn.numberOfPeopleBorrowed - 1, sizeof(User));
+            for(int j = 0, k = 0; j < bookToReturn.numberOfPeopleBorrowed; j++)
+            {
+                if(CompareUsers(*((TotalBooks + i)->borrowedPeople + j), *(bookToReturn.borrowedPeople + j)) == FALSE)
+                {
+                    *(newSetOfUsers + k) = *(bookToReturn.borrowedPeople + j);
+                    k++;
+                }
+                else
+                {
+                    temp++;
+                }
+            }
+            free((TotalBooks + i)->borrowedPeople);
+            (TotalBooks + i)->borrowedPeople = newSetOfUsers;
 
-    InputSearchBook();
+            for(int i = 0 ; i < temp; i++)
+            {
+                bookToReturn.numberOfPeopleBorrowed--;
+                bookToReturn.numberOfCopies++;
+            }
 
-    //UpdateBooks();
+        }
+        *(newSet + i) = *(TotalBooks + i);
+    }
+    free(TotalBooks);
+    TotalBooks = newSet;
 
-    return 0;
-
+    return TRUE;
 }
 
-*/
+void AskReturnBook(int all)
+{
+    if(all == TRUE)
+    {
+        LoadBooks();
+
+        if(foundBooks != NULL)
+        free(foundBooks);
+
+        foundBooks = TotalBooks;
+        numberOfFoundBooks = totalNumberOfBooks;
+        printBooksList();
+        getchar();
+    }
+    char option;
+    if(getSelectedUser() == NULL)
+    {
+        printf("Select a User And try Again.\n");
+        return;
+    }
+
+    printf("1)Return Single Book\t\t2)Return Multiple Books\t\tPress Enter To Exit\n");
+    if(getchar()=='\n')
+    {
+        option = getchar();
+    }
+    else
+    {
+        option = getchar();
+    }
+    
+
+    switch (option)
+    {
+        case '1':
+        ReturnSingleBook();
+        break;
+
+        case '2':
+        ReturnMultipleBook();
+        break;
+
+        case RETURNCHARACTER:
+        default:
+        break;
+    }
+}
+
+void ReturnSingleBook()
+{
+    printf("Enter The Number Of Book You Would Like To Return : ");
+    int option;
+    scanf("%d", &option);
+    if(option < 1 || option > numberOfFoundBooks)
+    {
+        printf("Invalid Option Entered!\n");
+        return;
+    }
+    option--;
+    int status = ReturnBook(*(foundBooks + option));
+    UpdateBooks();
+    if(status == TRUE)
+    {
+        printf("Return Books successfully!");
+    }
+
+    getchar();
+
+}
+void ReturnMultipleBook()
+{
+    int numberOfBooksToBorrow = 1;
+    printf("Enter Number Of The Books You Would Like To Return : ");
+    scanf("%d", &numberOfBooksToBorrow);
+
+    int BooksToBorrow[numberOfBooksToBorrow];
+
+    int *i = (int*) calloc(numberOfBooksToBorrow, sizeof(int));
+
+    printf("Enter Numbers of those books seperated by space\n");
+    for(int i = 0; i < numberOfBooksToBorrow; i++)
+    {
+        int option;
+        scanf("%d", &option);
+        if(option < 1 || option > numberOfFoundBooks)
+        {
+            printf("Invalid Option Enter Again.\n");
+            i--;
+            continue;
+        }
+        BooksToBorrow[i] = --option;
+    }
+    
+    int status = 0;
+
+    for(int i = 0; i < numberOfBooksToBorrow; i++)
+    {
+        Book b = *(foundBooks + BooksToBorrow[i]);
+        status= BorrowBook(b);
+    }
+    if(status == TRUE)
+    {
+        printf("Return Books successfully!");
+    }
+    UpdateBooks();
+
+    free(i);
+    getchar();
+}

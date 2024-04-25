@@ -41,6 +41,10 @@ int main()
             clearScreen();
             break;
 
+            case SHOWSELECTEDUSER:
+            printUser(getSelectedUser());
+            break;
+
             case MAINMENU:
             mainMenu(CLEAR_SCREEN);
             break;
@@ -107,6 +111,7 @@ void mainMenu(int clear)
     printf("\t     BOOK\t\t\tBook Management\n");
     printf("\t     USER\t\t\tUser Management\n");
     printf("\t     CLEAR\t\t\tClear Screen\n");
+    printf("\t     SUSER\t\t\tShow Selected User\n");
 
 }
 void bookMenu()
@@ -126,6 +131,7 @@ void bookMenu()
         printf("\t     REMOVEBOOK\t\t\tRemove Book\n");
         printf("\t     SEARCHBOOK\t\t\tSearch Book\n");
         printf("\t     ALLBOOK\t\t\tDisplay All Book\n");
+        printf("\t     SUSER\t\t\tShow Selected User\n");
         switch (takeCommand(command))
         {
             case EXIT:
@@ -142,6 +148,10 @@ void bookMenu()
 
             case SEARCHBOOK:
             InputSearchBook();
+            break;
+
+            case SHOWSELECTEDUSER:
+            printUser(getSelectedUser());
             break;
 
             case ALLBOOK:
@@ -190,6 +200,7 @@ void userMenu()
         printf("\t     REMOVEUSER\t\t\tRemove User\n");
         printf("\t     SEARCHUSER\t\t\tSearch User\n");
         printf("\t     ALLUSER\t\t\tDisplay All Users\n");
+        printf("\t     SUSER\t\t\tShow Selected User\n");
         switch (takeCommand(command))
         {
             case EXIT:
@@ -206,6 +217,10 @@ void userMenu()
 
             case SEARCHUSER:
             InputSearchUser();
+            break;
+
+            case SHOWSELECTEDUSER:
+            printUser(getSelectedUser());
             break;
 
             case ALLUSER:
