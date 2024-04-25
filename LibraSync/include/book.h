@@ -18,7 +18,7 @@ void InputSearchBook();
 void RemoveSingleBook();
 void RemoveMultipleBook();
 void RemoveAllBooks();
-void BorrowBook(Book);
+int BorrowBook(Book);
 
 void AskBorrowBook(int);
 void BorrowSingleBook();

@@ -49,7 +49,6 @@ void AddBook(Book bookToBeAdded)
 
 void UpdateBooks()
 {
-    printf("DEBUG() -> UpdateBooks()\n");
     if(TotalBooks == NULL)
     {
         printf("Unable To Update The Books.\nPlease Try Again.");
@@ -57,10 +56,8 @@ void UpdateBooks()
     }
     FILE* IFile;
     IFile = fopen("data/BIndex.txt","w");
-    printf("DEBUG() -> UpdateBooks() -> totalNumberOfBooks %d\n", totalNumberOfBooks);
     for(int i = 0; i < totalNumberOfBooks; i++) // 0 < 2
     {
-        printf("DEBUG() -> UpdateBooks() -> LOOP %d\n", i);
         FILE* file;
         char fileName[UUIDSIZE+11];
         sprintf(fileName, "data/B-%s.txt", (TotalBooks + i)->UUID);
@@ -82,19 +79,6 @@ void UpdateBooks()
         fprintf(file, "%d\n", (TotalBooks+i)->numberOfPeopleBorrowed);
         for(int j = 0; j < (TotalBooks+i)->numberOfPeopleBorrowed; j++)
         {
-            /*
-            if((TotalBooks + i)->borrowedPeople == NULL)
-            {
-                continue;
-            } 
-            User* u = (TotalBooks + i)->borrowedPeople;
-            if((u + j)->UUID == NULL)
-            {
-                printf("DEBUG()-> NULL");
-            }
-            fprintf(file, "%s\n", (u + j)->UUID);
-            */
-           printf("DEBUG() -> UUID : '%s'\n", ((TotalBooks + i)->borrowedPeople + j)->UUID);
            fprintf(file, "%s\n", ((TotalBooks + i)->borrowedPeople + j)->UUID);
         }
         fclose(file);
@@ -119,7 +103,6 @@ void LoadBooks()
         if (c == '\n')
             totalNumberOfBooks += 1;
 
-    ////printf("DEBUG() -> totalNumberOFBooks : %d\n", totalNumberOfBooks);
     rewind(fp);
     if (totalNumberOfBooks <= 0)
     {
@@ -157,7 +140,6 @@ void LoadBooks()
                &((TotalBooks + i)->numberOfCopies),
                &((TotalBooks + i)->numberOfPeopleBorrowed));
         int numberOfPeopleBorrowed = (TotalBooks + i)->numberOfPeopleBorrowed;
-        printf("DEBUG() -> numberOfPeopleBorrowed : %d\n", numberOfPeopleBorrowed);
         if (numberOfPeopleBorrowed == 0)
         {
             (TotalBooks + i)->borrowedPeople = NULL;
@@ -174,7 +156,6 @@ void LoadBooks()
             {
                 char fileName[UUIDSIZE + 11];
                 sprintf(fileName, "data/U-%s.txt", ((TotalBooks + i)->borrowedPeople + j)->UUID);
-                printf("DEBUG() -> fileName: %s\n", fileName);
                 FILE *file2 = fopen(fileName, "r");
                 if (file2 == NULL)
                 {
@@ -455,22 +436,73 @@ void BorrowSingleBook()
         return;
     }
     option--;
-
-    printBook((foundBooks + option));
-    BorrowBook(*(foundBooks + option));
+    int status = BorrowBook(*(foundBooks + option));
     UpdateBooks();
+    if(status == TRUE)
+    {
+        printf("Borrowed Books successfully!");
+    }
+
+    getchar();
 
 }
 void BorrowMultipleBook()
 {
+    int numberOfBooksToBorrow = 1;
+    printf("Enter Number Of The Books You Would Like To Borrow : ");
+    scanf("%d", &numberOfBooksToBorrow);
 
+    int BooksToBorrow[numberOfBooksToBorrow];
+
+    int *i = (int*) calloc(numberOfBooksToBorrow, sizeof(int));
+
+    printf("Enter Numbers of those books seperated by space\n");
+    for(int i = 0; i < numberOfBooksToBorrow; i++)
+    {
+        int option;
+        scanf("%d", &option);
+        if(option < 1 || option > numberOfFoundBooks)
+        {
+            printf("Invalid Option Enter Again.\n");
+            i--;
+            continue;
+        }
+        BooksToBorrow[i] = --option;
+    }
+    
+    int status = 0;
+
+    for(int i = 0; i < numberOfBooksToBorrow; i++)
+    {
+        Book b = *(foundBooks + BooksToBorrow[i]);
+        status= BorrowBook(b);
+    }
+    if(status == TRUE)
+    {
+        printf("Borrowed Books successfully!");
+    }
+    UpdateBooks();
+
+    free(i);
+    getchar();
 }
-void BorrowBook(Book bookToBorrow)
+int BorrowBook(Book bookToBorrow)
 {
+    if(bookToBorrow.numberOfCopies == 0)
+    {
+        printf("There are no more copies left to borrow the book.");
+        getchar();
+        return FALSE;
+    }
     if(TotalBooks == NULL)
     {
         printf("Unable To Borrow The Book.\n");
-        return;
+        return FALSE;
+    }
+    if(getSelectedUser()->UUID == NULL)
+    {
+        printf("Please select user and try again.\n");
+        return FALSE;
     }
     int check = 0;
     Book* newSet = (Book*) calloc(totalNumberOfBooks, sizeof(Book));
@@ -498,12 +530,10 @@ void BorrowBook(Book bookToBorrow)
                     *(newSetOfUsers + j) = *(bookToBorrow.borrowedPeople + j);
                 }
                 *(newSetOfUsers + n) = *getSelectedUser();
-                //printUser((TotalBooks + i)->borrowedPeople + n);
                 free(bookToBorrow.borrowedPeople);
                 bookToBorrow.borrowedPeople = newSetOfUsers;
-                printf("numberOfPeopleBorrowed : %d\n", bookToBorrow.numberOfPeopleBorrowed);
                 bookToBorrow.numberOfPeopleBorrowed++;
-                printf("After + numberOfPeopleBorrowed : %d\n", bookToBorrow.numberOfPeopleBorrowed);
+                bookToBorrow.numberOfCopies--;
             }
             *(TotalBooks + i) = bookToBorrow;
 
@@ -513,28 +543,8 @@ void BorrowBook(Book bookToBorrow)
     free(TotalBooks);
     TotalBooks = newSet;
 
-    printf("DEBUG()-> Modified Book\n");
-    printBook(&bookToBorrow); 
+    return TRUE;
 }
-
-void OBorrowBook(Book *bookToBorrow)
-{
-    printf("DEBUG() -> Before.\n");
-    printf("DEBUG() -> BorrowBook() -> numberOfPeopleBorrowed : %d\n",bookToBorrow->numberOfPeopleBorrowed);
-
-    if(bookToBorrow->borrowedPeople == NULL)
-    {
-        printf("DEBUG() -> NULL\n");
-        bookToBorrow->borrowedPeople = getSelectedUser();
-        bookToBorrow->numberOfPeopleBorrowed = 1;
-        printf("DEBUG() -> NULL\n");
-        return;
-    }
-    bookToBorrow->numberOfPeopleBorrowed++;
-    
-    printf("DEBUG() -> After.\n");
-}
-
 
 
 void AskRemoveBook(int all)
@@ -627,6 +637,7 @@ void RemoveMultipleBook()
     }
 
     UpdateBooks();
+    free(i);
 
     getchar();
     getchar();
