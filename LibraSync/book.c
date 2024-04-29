@@ -9,7 +9,7 @@
 #include "include/librasync.h"
 
 Book* TotalBooks, *foundBooks;
-Index* bIndex, UIndex;
+Index* bIndex;
 
 int totalNumberOfBooks = 0, numberOfFoundBooks = 0;
 
